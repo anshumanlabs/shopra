@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import products from "../data/products";
 import ProductCard from "../components/ProductCard";
 import useDebounce from "../hooks/useDebounce";
+import "./Shop.css";
 
 const PAGE_SIZE = 6;
 

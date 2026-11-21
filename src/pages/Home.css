@@ -60,7 +60,7 @@
 
   .categories-section,
   .products-section {
-    padding: 60px 5%;
+    padding: 60px 2%;
   }
 }
 
@@ -69,7 +69,7 @@
 .categories-section,
 .products-section {
   max-width: 1400px;
-  padding: 85px 6%;
+  padding: 25px 5%;
   margin: auto;
 }
 
