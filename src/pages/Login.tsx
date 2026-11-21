@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, LockKeyhole, Mail, ArrowRight } from "lucide-react";
@@ -36,7 +35,9 @@ function Login() {
 
         <div className="auth-heading">
           <span className="auth-tag">WELCOME BACK</span>
-          <h1>Sign in to your <span>account.</span></h1>
+          <h1>
+            Sign in to your <span>account.</span>
+          </h1>
           <p>Enter your details to continue shopping with SHOPORA.</p>
         </div>
 

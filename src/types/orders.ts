@@ -8,17 +8,9 @@ export interface ShippingAddress {
   pincode: string;
 }
 
-export type OrderStatus =
-  | "PLACED"
-  | "PROCESSING"
-  | "SHIPPED"
-  | "DELIVERED"
-  | "CANCELLED";
+export type OrderStatus = "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
 
-export type PaymentStatus =
-  | "PENDING"
-  | "SUCCESS"
-  | "FAILED";
+export type PaymentStatus = "PENDING" | "SUCCESS" | "FAILED";
 
 export interface OrderItem {
   productId: number;

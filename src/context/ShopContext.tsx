@@ -1,21 +1,8 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import type { Product, CartItem, ShopContextType } from "../types";
 
-import type {
-  Product,
-  CartItem,
-  ShopContextType,
-} from "../types";
-
-const ShopContext = createContext<ShopContextType | undefined>(
-  undefined
-);
+const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 interface ShopProviderProps {
   children: ReactNode;
@@ -38,9 +25,7 @@ function normalizeCart(savedCart: unknown): CartItem[] {
 
     const existing = grouped.get(product.id);
     const incomingQuantity =
-      Number.isInteger(product.quantity) && product.quantity! > 0
-        ? product.quantity!
-        : 1;
+      Number.isInteger(product.quantity) && product.quantity! > 0 ? product.quantity! : 1;
 
     if (existing) {
       existing.quantity += incomingQuantity;
@@ -68,7 +53,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
   const [wishlist, setWishlist] = useState<Product[]>(() => {
     try {
       const saved = localStorage.getItem("shopora-wishlist");
-      return saved ? JSON.parse(saved) as Product[] : [];
+      return saved ? (JSON.parse(saved) as Product[]) : [];
     } catch {
       return [];
     }
@@ -87,9 +72,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
     if (!Number.isInteger(quantity) || quantity < 1) return;
 
     setCart((previous) => {
-      const existing = previous.find(
-        (item) => item.id === product.id
-      );
+      const existing = previous.find((item) => item.id === product.id);
 
       if (existing) {
         return previous.map((item) =>
@@ -109,10 +92,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
         ...previous,
         {
           ...product,
-          quantity: Math.min(
-            quantity,
-            product.stock ?? Number.MAX_SAFE_INTEGER
-          ),
+          quantity: Math.min(quantity, product.stock ?? Number.MAX_SAFE_INTEGER),
         },
       ];
     });
@@ -132,10 +112,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
         item.id === id
           ? {
               ...item,
-              quantity: Math.min(
-                quantity,
-                item.stock ?? Number.MAX_SAFE_INTEGER
-              ),
+              quantity: Math.min(quantity, item.stock ?? Number.MAX_SAFE_INTEGER),
             }
           : item
       )
@@ -143,9 +120,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
   };
 
   const removeFromCart = (id: number) => {
-    setCart((previous) =>
-      previous.filter((item) => item.id !== id)
-    );
+    setCart((previous) => previous.filter((item) => item.id !== id));
   };
 
   const toggleWishlist = (product: Product) => {
@@ -170,11 +145,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
     clearCart,
   };
 
-  return (
-    <ShopContext.Provider value={value}>
-      {children}
-    </ShopContext.Provider>
-  );
+  return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 }
 
 export function useShop() {

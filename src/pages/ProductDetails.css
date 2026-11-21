@@ -79,7 +79,7 @@
   font-size: 16px;
 }
 
-.details-price>span {
+.details-price > span {
   padding: 6px 10px;
   background: #24152f;
   color: #c084fc;
@@ -117,12 +117,12 @@
   margin: 25px 0;
 }
 
-.quantity-control>span {
+.quantity-control > span {
   color: var(--muted);
   font-size: 13px;
 }
 
-.quantity-control>div {
+.quantity-control > div {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -140,7 +140,7 @@
 }
 
 .quantity-control button:disabled {
-  opacity: .3;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
@@ -154,7 +154,7 @@
 }
 
 .details-actions .primary-btn:disabled {
-  opacity: .5;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }

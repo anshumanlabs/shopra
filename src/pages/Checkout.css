@@ -1,4 +1,3 @@
-
 .checkout-page,
 .orders-page,
 .order-details-page {
@@ -90,7 +89,7 @@
 }
 
 .checkout-submit:disabled {
-  opacity: .6;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 

@@ -13,13 +13,9 @@ function Home() {
       {/* Trending products */}
 
       <section className="products-section" id="shop">
-
         <div className="section-heading">
-
           <div>
-            <span className="section-tag">
-              HANDPICKED FOR YOU
-            </span>
+            <span className="section-tag">HANDPICKED FOR YOU</span>
 
             <h2>
               Trending Products<span>.</span>
@@ -31,20 +27,13 @@ function Home() {
           <Link to="/shop" className="view-all">
             View All <ArrowRight size={18} />
           </Link>
-
         </div>
 
         <div className="products-grid">
-
           {products.slice(0, 4).map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
+            <ProductCard key={product.id} product={product} />
           ))}
-
         </div>
-
       </section>
 
       {/* Categories */}
@@ -53,7 +42,9 @@ function Home() {
         <div className="section-heading">
           <div>
             <span className="section-tag">EXPLORE SHOPORA</span>
-            <h2>Shop by Category<span>.</span></h2>
+            <h2>
+              Shop by Category<span>.</span>
+            </h2>
           </div>
         </div>
         <div className="category-grid">
@@ -67,26 +58,18 @@ function Home() {
       {/* Promotion */}
 
       <section className="promo-section" id="about">
-
         <div>
-          <span className="section-tag">
-            SPECIAL OFFER
-          </span>
+          <span className="section-tag">SPECIAL OFFER</span>
 
           <h2>Upgrade Your Style.</h2>
 
-          <p>
-            Get up to 30% off on selected products.
-            Discover something extraordinary.
-          </p>
+          <p>Get up to 30% off on selected products. Discover something extraordinary.</p>
 
           <Link to="/shop" className="primary-btn">
             Explore Deals <ArrowRight size={18} />
           </Link>
         </div>
-
       </section>
-
     </main>
   );
 }

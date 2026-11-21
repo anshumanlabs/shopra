@@ -1,14 +1,6 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  UserRound,
-  Mail,
-  LockKeyhole,
-  Eye,
-  EyeOff,
-  ArrowRight,
-} from "lucide-react";
+import { UserRound, Mail, LockKeyhole, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 
@@ -58,7 +50,9 @@ function Signup() {
 
         <div className="auth-heading">
           <span className="auth-tag">JOIN SHOPORA</span>
-          <h1>Create your <span>account.</span></h1>
+          <h1>
+            Create your <span>account.</span>
+          </h1>
           <p>Sign up and discover a better way to shop.</p>
         </div>
 
@@ -128,11 +122,7 @@ function Signup() {
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               aria-label="Toggle confirm password visibility"
             >
-              {showConfirmPassword ? (
-                <EyeOff size={19} />
-              ) : (
-                <Eye size={19} />
-              )}
+              {showConfirmPassword ? <EyeOff size={19} /> : <Eye size={19} />}
             </button>
           </div>
 

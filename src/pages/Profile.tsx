@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { UserRound, Mail, LogOut, ShoppingBag } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -19,7 +18,9 @@ function Profile() {
     <main className="profile-page">
       <div className="profile-header">
         <span className="auth-tag">MY ACCOUNT</span>
-        <h1>Welcome, <span>{user.name}</span></h1>
+        <h1>
+          Welcome, <span>{user.name}</span>
+        </h1>
         <p>Manage your SHOPORA account and shopping activity.</p>
       </div>
 

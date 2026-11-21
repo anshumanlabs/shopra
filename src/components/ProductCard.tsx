@@ -1,4 +1,3 @@
-
 import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
@@ -12,32 +11,22 @@ interface ProductCardProps {
 function ProductCard({ product }: ProductCardProps) {
   const { addToCart, toggleWishlist, wishlist } = useShop();
 
-  const isWishlisted = wishlist.some(
-    (item) => item.id === product.id
-  );
+  const isWishlisted = wishlist.some((item) => item.id === product.id);
 
   return (
     <div className="product-card">
       <div className="product-image">
-        <Link
-          to={`/products/${product.id}`}
-          aria-label={`View ${product.name}`}
-        >
+        <Link to={`/products/${product.id}`} aria-label={`View ${product.name}`}>
           <img src={product.image} alt={product.name} loading="lazy" />
         </Link>
 
         <button
           className={`wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
           onClick={() => toggleWishlist(product)}
-          aria-label={
-            isWishlisted ? "Remove from wishlist" : "Add to wishlist"
-          }
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           aria-pressed={isWishlisted}
         >
-          <Heart
-            size={19}
-            fill={isWishlisted ? "currentColor" : "none"}
-          />
+          <Heart size={19} fill={isWishlisted ? "currentColor" : "none"} />
         </button>
 
         <button
@@ -53,10 +42,7 @@ function ProductCard({ product }: ProductCardProps) {
       <div className="product-info">
         <span className="product-category">{product.category}</span>
 
-        <Link
-          to={`/products/${product.id}`}
-          className="product-title-link"
-        >
+        <Link to={`/products/${product.id}`} className="product-title-link">
           <h3>{product.name}</h3>
         </Link>
 
@@ -66,18 +52,11 @@ function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="product-price">
-          <strong>
-            ₹{product.price.toLocaleString("en-IN")}
-          </strong>
-          <del>
-            ₹{product.oldPrice.toLocaleString("en-IN")}
-          </del>
+          <strong>₹{product.price.toLocaleString("en-IN")}</strong>
+          <del>₹{product.oldPrice.toLocaleString("en-IN")}</del>
         </div>
 
-        <Link
-          to={`/products/${product.id}`}
-          className="view-details-link"
-        >
+        <Link to={`/products/${product.id}`} className="view-details-link">
           <Eye size={15} /> View Details
         </Link>
       </div>

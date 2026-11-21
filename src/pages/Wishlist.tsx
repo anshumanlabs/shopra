@@ -10,20 +10,18 @@ function Wishlist() {
 
   return (
     <main className="wishlist-page">
-
       <div className="shop-heading">
         <span className="section-tag">YOUR FAVORITES</span>
-        <h1>My Wishlist<span>.</span></h1>
+        <h1>
+          My Wishlist<span>.</span>
+        </h1>
         <p>Products you love, all in one place.</p>
       </div>
 
       {wishlist.length > 0 ? (
         <div className="products-grid">
           {wishlist.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
@@ -39,7 +37,6 @@ function Wishlist() {
           </Link>
         </div>
       )}
-
     </main>
   );
 }

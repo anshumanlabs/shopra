@@ -9,10 +9,7 @@ interface CategoryCardProps {
 
 function CategoryCard({ number, name }: CategoryCardProps) {
   return (
-    <Link
-      to={`/shop?category=${encodeURIComponent(name)}`}
-      className="category-item"
-    >
+    <Link to={`/shop?category=${encodeURIComponent(name)}`} className="category-item">
       <span>{number}</span>
 
       <div className="category-bottom">

@@ -129,7 +129,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .checkout-btn:hover {
@@ -168,7 +168,6 @@
 }
 
 @media (max-width: 700px) {
-
   .shop-page,
   .cart-page,
   .wishlist-page {
@@ -226,7 +225,7 @@
 }
 
 .cart-quantity button:disabled {
-  opacity: .3;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 

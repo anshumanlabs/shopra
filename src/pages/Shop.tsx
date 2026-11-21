@@ -1,4 +1,3 @@
-
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -13,13 +12,9 @@ const PAGE_SIZE = 6;
 function Shop() {
   const [searchParams] = useSearchParams();
 
-  const [category, setCategory] = useState(
-    searchParams.get("category") || "All"
-  );
+  const [category, setCategory] = useState(searchParams.get("category") || "All");
 
-  const [search, setSearch] = useState(
-    searchParams.get("search") || ""
-  );
+  const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const [sort, setSort] = useState("default");
   const [minPrice, setMinPrice] = useState("");
@@ -28,18 +23,11 @@ function Shop() {
 
   const debouncedSearch = useDebounce(search, 350);
 
-  const categories = [
-    "All",
-    "Fashion",
-    "Electronics",
-    "Accessories",
-    "Footwear",
-  ];
+  const categories = ["All", "Fashion", "Electronics", "Accessories", "Footwear"];
 
   const filteredProducts = useMemo(() => {
     let result = products.filter((product) => {
-      const matchesCategory =
-        category === "All" || product.category === category;
+      const matchesCategory = category === "All" || product.category === category;
 
       const searchTerm = debouncedSearch.trim().toLowerCase();
 
@@ -48,18 +36,11 @@ function Shop() {
         product.category.toLowerCase().includes(searchTerm) ||
         product.description.toLowerCase().includes(searchTerm);
 
-      const matchesMin =
-        minPrice === "" || product.price >= Number(minPrice);
+      const matchesMin = minPrice === "" || product.price >= Number(minPrice);
 
-      const matchesMax =
-        maxPrice === "" || product.price <= Number(maxPrice);
+      const matchesMax = maxPrice === "" || product.price <= Number(maxPrice);
 
-      return (
-        matchesCategory &&
-        matchesSearch &&
-        matchesMin &&
-        matchesMax
-      );
+      return matchesCategory && matchesSearch && matchesMin && matchesMax;
     });
 
     switch (sort) {
@@ -76,9 +57,7 @@ function Shop() {
         break;
 
       case "name":
-        result = [...result].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+        result = [...result].sort((a, b) => a.name.localeCompare(b.name));
         break;
     }
 
@@ -91,10 +70,7 @@ function Shop() {
 
   const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
-  const paginatedProducts = filteredProducts.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
-  );
+  const paginatedProducts = filteredProducts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const clearFilters = () => {
     setCategory("All");
@@ -109,7 +85,9 @@ function Shop() {
     <main className="shop-page">
       <div className="shop-heading">
         <span className="section-tag">DISCOVER YOUR STYLE</span>
-        <h1>Our Collection<span>.</span></h1>
+        <h1>
+          Our Collection<span>.</span>
+        </h1>
         <p>Explore our complete collection of products.</p>
       </div>
 
@@ -137,11 +115,7 @@ function Shop() {
 
         <div className="sort-select">
           <SlidersHorizontal size={17} />
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            aria-label="Sort products"
-          >
+          <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort products">
             <option value="default">Default sorting</option>
             <option value="low">Price: Low to High</option>
             <option value="high">Price: High to Low</option>
@@ -200,8 +174,7 @@ function Shop() {
         <section className="shop-results">
           <div className="results-heading">
             <p>
-              Showing {paginatedProducts.length} of{" "}
-              {filteredProducts.length} products
+              Showing {paginatedProducts.length} of {filteredProducts.length} products
             </p>
           </div>
 
@@ -215,10 +188,7 @@ function Shop() {
 
               {totalPages > 1 && (
                 <div className="pagination">
-                  <button
-                    disabled={page === 1}
-                    onClick={() => setPage((current) => current - 1)}
-                  >
+                  <button disabled={page === 1} onClick={() => setPage((current) => current - 1)}>
                     Previous
                   </button>
 
