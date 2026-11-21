@@ -1,44 +1,44 @@
 .profile-page {
-max-width: 1200px;
+  max-width: 1200px;
   min-height: 70vh;
   margin: auto;
   padding: 75px 6% 100px;
 }
 
 .profile-header {
-margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 .profile-header h1 {
-font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: clamp(35px, 5vw, 52px);
   margin: 15px 0;
 }
 
 .profile-header h1 span {
-color: var(--purple);
+  color: var(--purple);
 }
 
 .profile-header p {
-color: var(--muted);
+  color: var(--muted);
   font-size: 14px;
 }
 
 .profile-grid {
-display: grid;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 25px;
 }
 
 .profile-card {
-padding: 32px;
+  padding: 32px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 9px;
 }
 
 .profile-avatar {
-width: 75px;
+  width: 75px;
   height: 75px;
   border-radius: 50%;
   display: grid;
@@ -49,12 +49,12 @@ width: 75px;
 }
 
 .profile-card h2 {
-font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   margin-bottom: 10px;
 }
 
 .profile-role {
-display: inline-block;
+  display: inline-block;
   padding: 5px 10px;
   background: #24152f;
   color: #c084fc;
@@ -64,7 +64,7 @@ display: inline-block;
 }
 
 .profile-detail {
-display: flex;
+  display: flex;
   align-items: center;
   gap: 12px;
   color: #aaa;
@@ -74,21 +74,21 @@ display: flex;
 }
 
 .profile-card .auth-submit {
-max-width: 200px;
+  max-width: 200px;
 }
 
 .profile-actions {
-display: flex;
+  display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
 .profile-actions h2 {
-margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .profile-link {
-display: flex;
+  display: flex;
   align-items: center;
   gap: 15px;
   padding: 17px;
@@ -99,22 +99,24 @@ display: flex;
 }
 
 .profile-link svg {
-color: var(--purple);
+  color: var(--purple);
 }
 
 .profile-link:hover {
-border-color: var(--purple);
+  border-color: var(--purple);
   background: #171020;
 }
 
-@media (max-width: 700px)  {
-.profile-page {
-padding: 50px 5% 75px;
-}
-.profile-grid {
-grid-template-columns: 1fr;
-}
-.profile-card {
-padding: 25px;
-}
+@media (max-width: 700px) {
+  .profile-page {
+    padding: 50px 5% 75px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    padding: 25px;
+  }
 }

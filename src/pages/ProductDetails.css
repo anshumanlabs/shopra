@@ -1,9 +1,3 @@
-.quick-add:disabled,
-.details-actions button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
 .product-details-page {
   max-width: 1400px;
   min-height: 70vh;
