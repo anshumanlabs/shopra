@@ -1,0 +1,71 @@
+/* Product card layout */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Fixed image height for every product */
+.product-image {
+  position: relative !important;
+  width: 100%;
+  height: 270px !important;
+  min-height: 270px;
+  flex: 0 0 270px;
+  overflow: hidden;
+  background: #191919;
+}
+
+/* Make image link fill its parent */
+.product-image > a {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Make every image fill the same area */
+.product-image img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  margin: 0;
+  padding: 0;
+}
+
+.product-image .quick-add {
+  position: absolute !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  width: calc(100% - 24px) !important;
+  z-index: 5;
+}
+
+/* Product information */
+.product-info {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .product-image {
+    height: 190px !important;
+    min-height: 190px;
+    flex-basis: 190px;
+  }
+}
+
+@media (max-width: 380px) {
+  .product-image {
+    height: 160px !important;
+    min-height: 160px;
+    flex-basis: 160px;
+  }
+}

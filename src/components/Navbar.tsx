@@ -10,10 +10,12 @@ import {
 
 import { Link, NavLink } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const { cart, wishlist } = useShop();
 
@@ -51,9 +53,13 @@ function Navbar() {
             )}
           </Link>
 
-          <button aria-label="Account">
+          <Link
+            to={isAuthenticated ? "/profile" : "/login"}
+            className="icon-link"
+            aria-label="My Account"
+          >
             <UserRound />
-          </button>
+          </Link>
 
           <Link to="/cart" className="icon-link" aria-label="Shopping cart">
             <ShoppingBag />

@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useContext,
@@ -6,7 +7,11 @@ import {
   type ReactNode,
 } from "react";
 
-import type { Product, ShopContextType } from "../types";
+import type {
+  Product,
+  CartItem,
+  ShopContextType,
+} from "../types";
 
 const ShopContext = createContext<ShopContextType | undefined>(
   undefined
@@ -16,11 +21,45 @@ interface ShopProviderProps {
   children: ReactNode;
 }
 
+// Convert old duplicate-product cart entries into quantity-based entries.
+function normalizeCart(savedCart: unknown): CartItem[] {
+  if (!Array.isArray(savedCart)) return [];
+
+  const grouped = new Map<number, CartItem>();
+
+  savedCart.forEach((item) => {
+    if (!item || typeof item !== "object" || !("id" in item)) {
+      return;
+    }
+
+    const product = item as Product & { quantity?: number };
+
+    if (typeof product.id !== "number") return;
+
+    const existing = grouped.get(product.id);
+    const incomingQuantity =
+      Number.isInteger(product.quantity) && product.quantity! > 0
+        ? product.quantity!
+        : 1;
+
+    if (existing) {
+      existing.quantity += incomingQuantity;
+    } else {
+      grouped.set(product.id, {
+        ...product,
+        quantity: incomingQuantity,
+      });
+    }
+  });
+
+  return Array.from(grouped.values());
+}
+
 export function ShopProvider({ children }: ShopProviderProps) {
-  const [cart, setCart] = useState<Product[]>(() => {
+  const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem("shopora-cart");
-      return saved ? JSON.parse(saved) as Product[] : [];
+      return saved ? normalizeCart(JSON.parse(saved)) : [];
     } catch {
       return [];
     }
@@ -43,18 +82,70 @@ export function ShopProvider({ children }: ShopProviderProps) {
     localStorage.setItem("shopora-wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  const addToCart = (product: Product) => {
-    setCart((previous) => [...previous, product]);
+  // Add product or increase its existing quantity.
+  const addToCart = (product: Product, quantity = 1) => {
+    if (!Number.isInteger(quantity) || quantity < 1) return;
+
+    setCart((previous) => {
+      const existing = previous.find(
+        (item) => item.id === product.id
+      );
+
+      if (existing) {
+        return previous.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                quantity: Math.min(
+                  item.quantity + quantity,
+                  product.stock ?? Number.MAX_SAFE_INTEGER
+                ),
+              }
+            : item
+        );
+      }
+
+      return [
+        ...previous,
+        {
+          ...product,
+          quantity: Math.min(
+            quantity,
+            product.stock ?? Number.MAX_SAFE_INTEGER
+          ),
+        },
+      ];
+    });
+  };
+
+  // Update quantity directly from the cart.
+  const updateQuantity = (id: number, quantity: number) => {
+    if (!Number.isInteger(quantity)) return;
+
+    if (quantity <= 0) {
+      removeFromCart(id);
+      return;
+    }
+
+    setCart((previous) =>
+      previous.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: Math.min(
+                quantity,
+                item.stock ?? Number.MAX_SAFE_INTEGER
+              ),
+            }
+          : item
+      )
+    );
   };
 
   const removeFromCart = (id: number) => {
-    setCart((previous) => {
-      const index = previous.findIndex((item) => item.id === id);
-
-      if (index === -1) return previous;
-
-      return previous.filter((_, i) => i !== index);
-    });
+    setCart((previous) =>
+      previous.filter((item) => item.id !== id)
+    );
   };
 
   const toggleWishlist = (product: Product) => {
@@ -73,6 +164,7 @@ export function ShopProvider({ children }: ShopProviderProps) {
     cart,
     wishlist,
     addToCart,
+    updateQuantity,
     removeFromCart,
     toggleWishlist,
     clearCart,

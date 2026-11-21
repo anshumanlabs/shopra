@@ -7,12 +7,18 @@ export interface Product {
   image: string;
   rating: number;
   description: string;
+  stock?: number;
+}
+
+export interface CartItem extends Product {
+  quantity: number;
 }
 
 export interface ShopContextType {
-  cart: Product[];
+  cart: CartItem[];
   wishlist: Product[];
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, quantity?: number) => void;
+  updateQuantity: (id: number, quantity: number) => void;
   removeFromCart: (id: number) => void;
   toggleWishlist: (product: Product) => void;
   clearCart: () => void;

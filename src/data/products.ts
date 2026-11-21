@@ -11,6 +11,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=700",
     rating: 4.8,
     description: "Premium quality oversized hoodie with a comfortable fit.",
+    stock: 8,
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700",
     rating: 4.9,
     description: "Stylish sneakers designed for everyday comfort.",
+    stock: 8,
   },
   {
     id: 3,
@@ -33,6 +35,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700",
     rating: 4.7,
     description: "A timeless wristwatch with a premium modern design.",
+    stock: 8,
   },
   {
     id: 4,
@@ -44,6 +47,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700",
     rating: 4.8,
     description: "A versatile backpack for work, travel and everyday use.",
+    stock: 8,
   },
   {
     id: 5,
@@ -55,6 +59,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=700",
     rating: 4.6,
     description: "Minimal everyday T-shirt made for effortless styling.",
+    stock: 8,
   },
   {
     id: 6,
@@ -66,6 +71,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
     rating: 4.9,
     description: "Enjoy your music with comfortable wireless headphones.",
+    stock: 8,
   },
   {
     id: 7,
@@ -77,6 +83,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700",
     rating: 4.7,
     description: "Modern sunglasses with a clean premium look.",
+    stock: 8,
   },
   {
     id: 8,
@@ -88,6 +95,7 @@ const products: Product[] = [
       "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=700",
     rating: 4.8,
     description: "Lightweight running shoes for active everyday use.",
+    stock: 8,
   },
 ];
 

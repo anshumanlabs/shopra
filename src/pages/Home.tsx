@@ -8,31 +8,7 @@ import { Link } from "react-router-dom";
 function Home() {
   return (
     <main>
-
       <Hero />
-
-      {/* Categories */}
-
-      <section className="categories-section" id="categories">
-
-        <div className="section-heading">
-          <div>
-            <span className="section-tag">EXPLORE SHOPORA</span>
-            <h2>Shop by Category<span>.</span></h2>
-          </div>
-        </div>
-
-        <div className="category-grid">
-
-          <CategoryCard number="01" name="Fashion" />
-          <CategoryCard number="02" name="Electronics" />
-          <CategoryCard number="03" name="Accessories" />
-          <CategoryCard number="04" name="Footwear" />
-
-        </div>
-
-      </section>
-
       {/* Trending products */}
 
       <section className="products-section" id="shop">
@@ -68,6 +44,23 @@ function Home() {
 
         </div>
 
+      </section>
+
+      {/* Categories */}
+
+      <section className="categories-section" id="categories">
+        <div className="section-heading">
+          <div>
+            <span className="section-tag">EXPLORE SHOPORA</span>
+            <h2>Shop by Category<span>.</span></h2>
+          </div>
+        </div>
+        <div className="category-grid">
+          <CategoryCard number="01" name="Fashion" />
+          <CategoryCard number="02" name="Electronics" />
+          <CategoryCard number="03" name="Accessories" />
+          <CategoryCard number="04" name="Footwear" />
+        </div>
       </section>
 
       {/* Promotion */}

@@ -1,7 +1,7 @@
 import {
-    Instagram,
-    Facebook,
-    Twitter,
+    // Instagram,
+    // Facebook,
+    // Twitter,
     ArrowUp,
 } from "lucide-react";
 
@@ -19,7 +19,7 @@ function Footer() {
                         Your World. Your Shopping.
                         Discover a better shopping experience.
                     </p>
-                    <div className="social-links">
+                    {/* <div className="social-links">
                         <a href="https://instagram.com" aria-label="Instagram">
                             <Instagram />
                         </a>
@@ -29,7 +29,7 @@ function Footer() {
                         <a href="https://twitter.com" aria-label="Twitter">
                             <Twitter />
                         </a>
-                    </div>
+                    </div> */}
                 </div>
                 <div>
                     <h4>Quick Links</h4>
