@@ -12,6 +12,7 @@ import {
 
 import products from "../data/products";
 import { useShop } from "../context/ShopContext";
+import "./ProductDetails.css";
 
 function ProductDetails() {
     const { productId } = useParams();

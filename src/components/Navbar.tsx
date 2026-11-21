@@ -11,6 +11,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
+import "./Navbar.css";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);

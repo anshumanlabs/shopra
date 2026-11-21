@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { useShop } from "../context/ShopContext";
+import "./Cart.css";
 
 function Cart() {
   const {

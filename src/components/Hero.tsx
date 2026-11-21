@@ -1,5 +1,6 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import "./Hero.css";
 
 function Hero() {
   return (

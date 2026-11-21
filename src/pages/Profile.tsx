@@ -2,6 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { UserRound, Mail, LogOut, ShoppingBag } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import "./Profile.css";
 
 function Profile() {
   const { user, logout } = useAuth();

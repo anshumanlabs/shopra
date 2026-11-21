@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useShop } from "../context/ShopContext";
 import ProductCard from "../components/ProductCard";
+import "./Wishlist.css";
 
 function Wishlist() {
   const { wishlist } = useShop();

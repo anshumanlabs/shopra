@@ -1,0 +1,155 @@
+.navbar {
+height: 82px;
+  background: rgba(8, 8, 8, .96);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+max-width: 1400px;
+  height: 100%;
+  padding: 0 6%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+font-family: "Space Grotesk", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  white-space: nowrap;
+}
+
+.logo span {
+color: var(--purple);
+}
+
+.nav-links {
+display: flex;
+  gap: 32px;
+}
+
+.nav-links a {
+font-size: 14px;
+  color: #c5c5c5;
+  transition: .3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+color: var(--purple);
+}
+
+.nav-icons {
+display: flex;
+  align-items: center;
+  gap: 19px;
+}
+
+.nav-icons button,
+.icon-link,
+.menu-btn {
+background: none;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.nav-icons button:hover,
+.icon-link:hover {
+color: var(--purple);
+}
+
+.icon-count {
+position: absolute;
+  top: -9px;
+  right: -10px;
+  background: var(--purple);
+  color: white;
+  border-radius: 50%;
+  min-width: 17px;
+  height: 17px;
+  font-size: 10px;
+  display: grid;
+  place-items: center;
+}
+
+.menu-btn {
+display: none;
+}
+
+.search-bar {
+position: absolute;
+  top: 82px;
+  left: 0;
+  width: 100%;
+  padding: 15px 6%;
+  background: #111;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+
+.search-bar input {
+flex: 1;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  color: white;
+  outline: none;
+  padding: 13px;
+}
+
+.search-bar button {
+border: none;
+  background: var(--purple);
+  padding: 0 16px;
+}
+
+@media (max-width: 700px)  {
+.navbar {
+height: 70px;
+}
+.nav-container {
+padding: 0 5%;
+}
+.logo {
+font-size: 24px;
+}
+.nav-links {
+display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    padding: 25px;
+    background: #101010;
+    flex-direction: column;
+    gap: 22px;
+    border-bottom: 1px solid var(--border);
+}
+.nav-links.active {
+display: flex;
+}
+.nav-icons {
+gap: 15px;
+}
+.nav-icons button:nth-child(3) {
+display: none;
+}
+.nav-icons svg {
+width: 19px;
+}
+.menu-btn {
+display: flex;
+}
+.search-bar {
+top: 70px;
+}
+}

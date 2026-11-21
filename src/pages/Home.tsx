@@ -4,6 +4,7 @@ import ProductCard from "../components/ProductCard";
 import CategoryCard from "../components/CategoryCard";
 import products from "../data/products";
 import { Link } from "react-router-dom";
+import "./Home.css";
 
 function Home() {
   return (

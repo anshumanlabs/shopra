@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import "./CategoryCard.css";
 
 interface CategoryCardProps {
   number: string;

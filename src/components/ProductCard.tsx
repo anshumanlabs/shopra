@@ -3,6 +3,7 @@ import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
 import type { Product } from "../types";
+import "./ProductCard.css";
 
 interface ProductCardProps {
   product: Product;
