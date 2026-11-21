@@ -33,9 +33,8 @@ function Navbar() {
         <nav className={`nav-links ${menuOpen ? "active" : ""}`}>
           <NavLink to="/" onClick={closeMenu}>Home</NavLink>
           <NavLink to="/shop" onClick={closeMenu}>Shop</NavLink>
-          <a href="/#categories" onClick={closeMenu}>Categories</a>
-          <a href="/#about" onClick={closeMenu}>About</a>
-          <a href="/#contact" onClick={closeMenu}>Contact</a>
+          <a href="/about" onClick={closeMenu}>About</a>
+          <a href="/contact" onClick={closeMenu}>Contact</a>
         </nav>
 
         <div className="nav-icons">

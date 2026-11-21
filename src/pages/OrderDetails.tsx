@@ -11,7 +11,7 @@ const trackingSteps = [
 
 function OrderDetails() {
   const { orderId } = useParams();
-  const [order, setOrder] = useState<Order | null>(null);
+  const [order] = useState<Order | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 

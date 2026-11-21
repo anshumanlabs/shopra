@@ -7,7 +7,7 @@ import "./Orders.css";
 
 function Orders() {
     const { user } = useAuth();
-    const [orders, setOrders] = useState<Order[]>([]);
+    const [orders,] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 

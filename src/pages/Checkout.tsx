@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Checkout.css";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
-import type { Order, ShippingAddress } from "../types/orders";
+import type { ShippingAddress } from "../types/orders";
 import { validateCard } from "../utils/cardValidator";
 
 const initialAddress: ShippingAddress = {
@@ -74,25 +74,25 @@ function Checkout() {
         try {
             const orderId = crypto.randomUUID();
 
-            const order: Order = {
-                id: orderId,
-                userId: user.id,
-                items: cart.map((item) => ({
-                    productId: item.id,
-                    name: item.name,
-                    image: item.image,
-                    price: item.price,
-                    quantity: item.quantity,
-                })),
-                shippingAddress: address,
-                subtotal,
-                discount: 0,
-                shipping,
-                total,
-                orderStatus: "PROCESSING",
-                paymentStatus: "PENDING",
-                createdAt: new Date().toISOString(),
-            };
+            // const order: Order = {
+            //     id: orderId,
+            //     userId: user.id,
+            //     items: cart.map((item) => ({
+            //         productId: item.id,
+            //         name: item.name,
+            //         image: item.image,
+            //         price: item.price,
+            //         quantity: item.quantity,
+            //     })),
+            //     shippingAddress: address,
+            //     subtotal,
+            //     discount: 0,
+            //     shipping,
+            //     total,
+            //     orderStatus: "PROCESSING",
+            //     paymentStatus: "PENDING",
+            //     createdAt: new Date().toISOString(),
+            // };
 
             // await orderService.createOrder(order);
 

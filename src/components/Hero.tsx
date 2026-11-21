@@ -16,13 +16,12 @@ function Hero() {
         <h1>
           SHOP THE
           <br />
-          <span>FUTURE.</span>
+          <span>BEST.</span>
         </h1>
 
         <p>
           Discover products you'll love.
-          Experience a new way of shopping
-          with SHOPORA.
+          Experience a new way of shopping.
         </p>
 
         <div className="hero-buttons">
