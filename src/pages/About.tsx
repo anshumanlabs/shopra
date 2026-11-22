@@ -73,14 +73,13 @@ function About() {
 
             <div className="about-card-bottom">
               <span>DISCOVER</span>
-              <span>EXPLORE</span>
-              <span>ENJOY</span>
+              <span></span>
+              <span>NEW</span>
             </div>
           </div>
-
           <div className="about-floating-tag">
             <Sparkles size={16} />
-            <span>Discover something new</span>
+            <span>SOMETHING</span>
           </div>
         </div>
 
@@ -90,7 +89,6 @@ function About() {
       <section className="about-story" id="our-story">
         <div className="about-story-label">
           <span className="about-eyebrow">OUR STORY</span>
-          <span className="about-section-number">01 / 03</span>
         </div>
 
         <div className="about-story-content">

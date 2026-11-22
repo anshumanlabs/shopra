@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -28,17 +27,13 @@ function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const storageKey = user
-    ? `shopra_addresses_${user.email}`
-    : "shopra_addresses_guest";
+  const storageKey = user ? `shopra_addresses_${user.email}` : "shopra_addresses_guest";
 
   const [addresses, setAddresses] = useState<SavedAddress[]>(() => {
     if (!user) return [];
 
     try {
-      const saved = localStorage.getItem(
-        `shopra_addresses_${user.email}`
-      );
+      const saved = localStorage.getItem(`shopra_addresses_${user.email}`);
 
       return saved ? JSON.parse(saved) : [];
     } catch {
@@ -108,11 +103,7 @@ function Profile() {
 
     if (editingId) {
       setAddresses((previous) =>
-        previous.map((item) =>
-          item.id === editingId
-            ? { ...item, ...cleanedAddress }
-            : item
-        )
+        previous.map((item) => (item.id === editingId ? { ...item, ...cleanedAddress } : item))
       );
     } else {
       const newAddress: SavedAddress = {
@@ -205,11 +196,6 @@ function Profile() {
             <ShoppingBag size={20} />
             <span>My Orders</span>
           </Link>
-
-          <Link to="/shop" className="profile-link">
-            <ShoppingBag size={20} />
-            <span>Continue Shopping</span>
-          </Link>
         </section>
       </div>
 
@@ -264,9 +250,7 @@ function Profile() {
                 ] as [keyof ShippingAddress, string][]
               ).map(([field, label]) => (
                 <label
-                  className={`address-field ${
-                    field === "address" ? "address-field-full" : ""
-                  }`}
+                  className={`address-field ${field === "address" ? "address-field-full" : ""}`}
                   key={field}
                 >
                   {label}
@@ -274,19 +258,11 @@ function Profile() {
                   <input
                     type={field === "email" ? "email" : "text"}
                     value={form[field]}
-                    onChange={(event) =>
-                      handleChange(field, event.target.value)
-                    }
+                    onChange={(event) => handleChange(field, event.target.value)}
                     placeholder={`Enter ${label.toLowerCase()}`}
                     required
-                    maxLength={
-                      field === "phone" ? 10 : field === "pincode" ? 6 : 150
-                    }
-                    inputMode={
-                      field === "phone" || field === "pincode"
-                        ? "numeric"
-                        : "text"
-                    }
+                    maxLength={field === "phone" ? 10 : field === "pincode" ? 6 : 150}
+                    inputMode={field === "phone" || field === "pincode" ? "numeric" : "text"}
                   />
                 </label>
               ))}
@@ -346,10 +322,7 @@ function Profile() {
                 </div>
 
                 <div className="address-card-actions">
-                  <button
-                    className="address-action"
-                    onClick={() => handleEdit(address)}
-                  >
+                  <button className="address-action" onClick={() => handleEdit(address)}>
                     <Pencil size={15} /> Edit
                   </button>
 

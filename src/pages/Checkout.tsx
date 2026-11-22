@@ -1,13 +1,6 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  MapPin,
-  Plus,
-  CreditCard,
-  CheckCircle2,
-  ShieldCheck,
-} from "lucide-react";
+import { MapPin, Plus, CreditCard, CheckCircle2, ShieldCheck } from "lucide-react";
 
 import "./Checkout.css";
 import { useShop } from "../context/ShopContext";
@@ -56,10 +49,7 @@ function validateExpiry(value: string) {
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
 
-  if (
-    year < currentYear ||
-    (year === currentYear && month < currentMonth)
-  ) {
+  if (year < currentYear || (year === currentYear && month < currentMonth)) {
     return "Your card has expired.";
   }
 
@@ -90,9 +80,7 @@ function Checkout() {
 
   const [addressErrors, setAddressErrors] = useState<string[]>([]);
 
-  const storageKey = user
-    ? `shopra_addresses_${user.email}`
-    : "";
+  const storageKey = user ? `shopra_addresses_${user.email}` : "";
 
   useEffect(() => {
     if (!storageKey) {
@@ -127,17 +115,14 @@ function Checkout() {
   }, [storageKey, user?.name, user?.email]);
 
   const subtotal = useMemo(
-    () =>
-      cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cart]
   );
 
   const shipping = subtotal >= 2000 ? 0 : 99;
   const total = subtotal + shipping;
 
-  const selectedAddress = savedAddresses.find(
-    (item) => item.id === selectedAddressId
-  );
+  const selectedAddress = savedAddresses.find((item) => item.id === selectedAddressId);
 
   const updateAddress = (field: keyof ShippingAddress, value: string) => {
     setAddress((previous) => ({
@@ -169,9 +154,7 @@ function Checkout() {
     return errors;
   };
 
-  const handlePlaceOrder = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handlePlaceOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
     setAddressErrors([]);
@@ -220,7 +203,7 @@ function Checkout() {
 
     const validation = validateCard(cardNumber, expiry, cvv);
 
-    if (!validation.valid) {
+    if (validation.valid) {
       setError(validation.errors.join(" "));
       return;
     }
@@ -235,11 +218,7 @@ function Checkout() {
       clearCart();
       navigate(`/orders/${orderId}`);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to place your order."
-      );
+      setError(err instanceof Error ? err.message : "Unable to place your order.");
     } finally {
       setLoading(false);
     }
@@ -251,9 +230,7 @@ function Checkout() {
         <CreditCard size={45} />
         <h1>Your cart is empty</h1>
         <p>Add some products before proceeding to checkout.</p>
-        <button onClick={() => navigate("/shop")}>
-          Continue Shopping
-        </button>
+        <button onClick={() => navigate("/shop")}>Continue Shopping</button>
       </main>
     );
   }
@@ -284,18 +261,15 @@ function Checkout() {
               <div className="saved-address-list">
                 {savedAddresses.map((item) => (
                   <label
-                    className={`saved-address-option ${!useNewAddress && selectedAddressId === item.id
-                      ? "selected"
-                      : ""
-                      }`}
+                    className={`saved-address-option ${
+                      !useNewAddress && selectedAddressId === item.id ? "selected" : ""
+                    }`}
                     key={item.id}
                   >
                     <input
                       type="radio"
                       name="deliveryAddress"
-                      checked={
-                        !useNewAddress && selectedAddressId === item.id
-                      }
+                      checked={!useNewAddress && selectedAddressId === item.id}
                       onChange={() => {
                         setSelectedAddressId(item.id);
                         setUseNewAddress(false);
@@ -309,11 +283,7 @@ function Checkout() {
                     <span className="saved-address-content">
                       <span className="saved-address-name">
                         {item.fullName}
-                        {item.isDefault && (
-                          <span className="address-default-tag">
-                            Default
-                          </span>
-                        )}
+                        {item.isDefault && <span className="address-default-tag">Default</span>}
                       </span>
 
                       <span>{item.address}</span>
@@ -325,20 +295,14 @@ function Checkout() {
                     </span>
 
                     {selectedAddressId === item.id && !useNewAddress && (
-                      <CheckCircle2
-                        className="address-selected-icon"
-                        size={20}
-                      />
+                      <CheckCircle2 className="address-selected-icon" size={20} />
                     )}
                   </label>
                 ))}
               </div>
             )}
 
-            <label
-              className={`new-address-option ${useNewAddress ? "selected" : ""
-                }`}
-            >
+            <label className={`new-address-option ${useNewAddress ? "selected" : ""}`}>
               <input
                 type="radio"
                 name="deliveryAddress"
@@ -372,8 +336,7 @@ function Checkout() {
                     ] as [keyof ShippingAddress, string][]
                   ).map(([field, label]) => (
                     <label
-                      className={`checkout-field ${field === "address" ? "field-full" : ""
-                        }`}
+                      className={`checkout-field ${field === "address" ? "field-full" : ""}`}
                       key={field}
                     >
                       {label}
@@ -381,14 +344,8 @@ function Checkout() {
                       <input
                         value={address[field]}
                         type={field === "email" ? "email" : "text"}
-                        inputMode={
-                          field === "phone" || field === "pincode"
-                            ? "numeric"
-                            : "text"
-                        }
-                        maxLength={
-                          field === "phone" ? 10 : field === "pincode" ? 6 : 150
-                        }
+                        inputMode={field === "phone" || field === "pincode" ? "numeric" : "text"}
+                        maxLength={field === "phone" ? 10 : field === "pincode" ? 6 : 150}
                         required
                         placeholder={`Enter ${label.toLowerCase()}`}
                         onChange={(event) => {
@@ -427,12 +384,9 @@ function Checkout() {
 
             <label className="checkout-field field-full">
               Card number
-
               <input
                 value={cardNumber}
-                onChange={(event) =>
-                  setCardNumber(formatCardNumber(event.target.value))
-                }
+                onChange={(event) => setCardNumber(formatCardNumber(event.target.value))}
                 placeholder="1234 5678 9012 3456"
                 inputMode="numeric"
                 autoComplete="cc-number"
@@ -444,12 +398,9 @@ function Checkout() {
             <div className="checkout-card-row">
               <label className="checkout-field">
                 Expiry date (MM/YY)
-
                 <input
                   value={expiry}
-                  onChange={(event) =>
-                    setExpiry(formatExpiry(event.target.value))
-                  }
+                  onChange={(event) => setExpiry(formatExpiry(event.target.value))}
                   placeholder="MM/YY"
                   inputMode="numeric"
                   autoComplete="cc-exp"
@@ -462,9 +413,7 @@ function Checkout() {
                 CVV
                 <input
                   value={cvv}
-                  onChange={(event) =>
-                    setCvv(event.target.value.replace(/\D/g, "").slice(0, 4))
-                  }
+                  onChange={(event) => setCvv(event.target.value.replace(/\D/g, "").slice(0, 4))}
                   placeholder="1234"
                   inputMode="numeric"
                   autoComplete="cc-csc"
@@ -476,9 +425,7 @@ function Checkout() {
 
             <div className="checkout-secure-note">
               <ShieldCheck size={17} />
-              <span>
-                Demo payment only. Never enter real card details.
-              </span>
+              <span>Demo payment only. Never enter real card details.</span>
             </div>
           </section>
 
@@ -493,9 +440,7 @@ function Checkout() {
             className="checkout-submit"
             disabled={loading || (!useNewAddress && !selectedAddressId)}
           >
-            {loading
-              ? "Processing..."
-              : `Pay ₹${total.toLocaleString("en-IN")}`}
+            {loading ? "Processing..." : `Pay ₹${total.toLocaleString("en-IN")}`}
           </button>
         </div>
 
@@ -514,9 +459,7 @@ function Checkout() {
                   </div>
                 </div>
 
-                <strong>
-                  ₹{(item.price * item.quantity).toLocaleString("en-IN")}
-                </strong>
+                <strong>₹{(item.price * item.quantity).toLocaleString("en-IN")}</strong>
               </div>
             ))}
           </div>

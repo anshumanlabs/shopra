@@ -1,10 +1,17 @@
 import { ArrowUp } from "lucide-react";
 import { FaInstagram, FaFacebookF, FaXTwitter } from "react-icons/fa6";
-
 import { Link } from "react-router-dom";
 import "./Footer.css";
+import { useState } from "react";
 
 function Footer() {
+  const [email, setEmail] = useState("");
+
+  const subscribeEmail = () => {
+    console.log("Subscribed:", email);
+    setEmail("");
+  };
+
   return (
     <footer className="footer" id="contact">
       <div className="footer-content">
@@ -19,30 +26,50 @@ function Footer() {
             <a href="https://instagram.com" aria-label="Instagram">
               <FaInstagram />
             </a>
-
             <a href="https://facebook.com" aria-label="Facebook">
               <FaFacebookF />
             </a>
-
             <a href="https://x.com" aria-label="X">
               <FaXTwitter />
             </a>
           </div>
         </div>
-
-        <div>
+        <div className="footer-links">
           <h4>Quick Links</h4>
           <Link to="/">Home</Link>
           <Link to="/shop">Shop</Link>
           <Link to="/about">About Us</Link>
           <Link to="/contact">Contact Us</Link>
         </div>
-      </div>
+        <div className="footer-newsletter">
+          <h4>Subscribe to Newsletter</h4>
+          <p>Get the latest updates, new arrivals and exclusive offers.</p>
 
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <button type="button" onClick={subscribeEmail}>
+            Subscribe
+          </button>
+        </div>
+      </div>
       <div className="footer-bottom">
         <span>© 2026 SHOPORA. All rights reserved.</span>
-
-        <a href="#home" className="back-top">
+        <a
+          href="#"
+          className="back-top"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
+        >
           Back to top <ArrowUp size={15} />
         </a>
       </div>
