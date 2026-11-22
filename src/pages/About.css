@@ -144,25 +144,27 @@
 
 .about-card-bottom {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  color: #888;
-  font-size: 9px;
-  letter-spacing: 2px;
+  gap: 12px;
+  width: 100%;
+}
+
+.about-card-bottom > span {
+  white-space: nowrap;
 }
 
 .about-floating-tag {
-  position: absolute;
-  right: -10px;
-  bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 18px;
+  justify-content: center;
+  gap: 7px;
+  white-space: nowrap;
+  padding: 14px 14px;
   border: 1px solid #392449;
   border-radius: 5px;
   background: #171020;
   color: #d8b4fe;
-  font-size: 12px;
 }
 
 .about-hero-index {

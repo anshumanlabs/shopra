@@ -1,7 +1,9 @@
 import type { Product } from "../types";
 
 const products: Product[] = [
+  // =========================================
   // FASHION
+  // =========================================
   {
     id: 1,
     name: "Premium Black Hoodie",
@@ -12,6 +14,29 @@ const products: Product[] = [
     rating: 4.8,
     description: "Premium quality oversized hoodie with a comfortable fit.",
     stock: 8,
+    comments: [
+      {
+        id: 1,
+        userName: "Rahul Sharma",
+        rating: 5,
+        comment: "Excellent quality and very comfortable. The fabric feels premium.",
+        date: "2026-11-15",
+      },
+      {
+        id: 2,
+        userName: "Priya Patel",
+        rating: 5,
+        comment: "Loved the oversized fit. Looks exactly like the pictures.",
+        date: "2026-11-12",
+      },
+      {
+        id: 3,
+        userName: "Amit Verma",
+        rating: 4,
+        comment: "Good hoodie and nice material. Delivery was also quick.",
+        date: "2026-11-08",
+      },
+    ],
   },
   {
     id: 2,
@@ -23,6 +48,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Minimal everyday T-shirt made for effortless styling.",
     stock: 15,
+    comments: [
+      {
+        id: 4,
+        userName: "Sneha Mehta",
+        rating: 5,
+        comment: "Very soft fabric and perfect for daily wear.",
+        date: "2026-11-18",
+      },
+      {
+        id: 5,
+        userName: "Karan Singh",
+        rating: 4,
+        comment: "Nice fit, although I would prefer slightly thicker fabric.",
+        date: "2026-11-10",
+      },
+    ],
   },
   {
     id: 3,
@@ -34,6 +75,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Classic denim jacket with a timeless casual look.",
     stock: 12,
+    comments: [
+      {
+        id: 6,
+        userName: "Vikram Joshi",
+        rating: 5,
+        comment: "Great denim quality. Looks stylish and fits perfectly.",
+        date: "2026-11-16",
+      },
+      {
+        id: 7,
+        userName: "Neha Shah",
+        rating: 4,
+        comment: "Really nice jacket for casual outings.",
+        date: "2026-11-09",
+      },
+    ],
   },
   {
     id: 4,
@@ -45,6 +102,22 @@ const products: Product[] = [
     rating: 4.5,
     description: "Comfortable casual shirt for everyday styling.",
     stock: 18,
+    comments: [
+      {
+        id: 8,
+        userName: "Rohit Gupta",
+        rating: 5,
+        comment: "Great colour and comfortable material.",
+        date: "2026-11-14",
+      },
+      {
+        id: 9,
+        userName: "Ananya Rao",
+        rating: 4,
+        comment: "Good shirt for everyday use. Fits well.",
+        date: "2026-11-06",
+      },
+    ],
   },
   {
     id: 5,
@@ -56,6 +129,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Trendy oversized graphic T-shirt with a relaxed fit.",
     stock: 20,
+    comments: [
+      {
+        id: 10,
+        userName: "Arjun Malhotra",
+        rating: 5,
+        comment: "Amazing oversized fit. The print looks great.",
+        date: "2026-11-17",
+      },
+      {
+        id: 11,
+        userName: "Meera Nair",
+        rating: 4,
+        comment: "Comfortable and stylish. Worth the price.",
+        date: "2026-11-11",
+      },
+    ],
   },
   {
     id: 6,
@@ -67,6 +156,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Modern slim fit jeans suitable for casual occasions.",
     stock: 14,
+    comments: [
+      {
+        id: 12,
+        userName: "Aditya Kumar",
+        rating: 5,
+        comment: "Perfect slim fit and comfortable denim.",
+        date: "2026-11-13",
+      },
+      {
+        id: 13,
+        userName: "Pooja Desai",
+        rating: 4,
+        comment: "Good quality jeans. Sizing is accurate.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 7,
@@ -78,9 +183,27 @@ const products: Product[] = [
     rating: 4.8,
     description: "Soft cotton sweatshirt with a relaxed silhouette.",
     stock: 11,
+    comments: [
+      {
+        id: 14,
+        userName: "Sahil Kapoor",
+        rating: 5,
+        comment: "Super soft and comfortable. Great for winter.",
+        date: "2026-11-19",
+      },
+      {
+        id: 15,
+        userName: "Isha Patel",
+        rating: 5,
+        comment: "Excellent quality. I would definitely recommend it.",
+        date: "2026-11-10",
+      },
+    ],
   },
 
+  // =========================================
   // FOOTWEAR
+  // =========================================
   {
     id: 8,
     name: "Classic Sneakers",
@@ -91,6 +214,22 @@ const products: Product[] = [
     rating: 4.9,
     description: "Stylish sneakers designed for everyday comfort.",
     stock: 8,
+    comments: [
+      {
+        id: 16,
+        userName: "Dev Patel",
+        rating: 5,
+        comment: "Very comfortable sneakers. Great design and finish.",
+        date: "2026-11-18",
+      },
+      {
+        id: 17,
+        userName: "Nikhil Jain",
+        rating: 5,
+        comment: "Excellent quality. Comfortable even after long walks.",
+        date: "2026-11-12",
+      },
+    ],
   },
   {
     id: 9,
@@ -102,6 +241,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Lightweight running shoes for active everyday use.",
     stock: 16,
+    comments: [
+      {
+        id: 18,
+        userName: "Manish Yadav",
+        rating: 5,
+        comment: "Lightweight and supportive. Great for running.",
+        date: "2026-11-16",
+      },
+      {
+        id: 19,
+        userName: "Riya Soni",
+        rating: 4,
+        comment: "Good shoes with nice cushioning.",
+        date: "2026-11-09",
+      },
+    ],
   },
   {
     id: 10,
@@ -113,6 +268,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Clean white sneakers that pair with almost any outfit.",
     stock: 13,
+    comments: [
+      {
+        id: 20,
+        userName: "Aarav Shah",
+        rating: 5,
+        comment: "Clean design and comfortable fit. Goes with everything.",
+        date: "2026-11-14",
+      },
+      {
+        id: 21,
+        userName: "Tanya Roy",
+        rating: 4,
+        comment: "Looks beautiful. Easy to style with casual outfits.",
+        date: "2026-11-05",
+      },
+    ],
   },
   {
     id: 11,
@@ -124,6 +295,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Durable leather boots with a refined design.",
     stock: 7,
+    comments: [
+      {
+        id: 22,
+        userName: "Kunal Arora",
+        rating: 5,
+        comment: "Premium finish and excellent build quality.",
+        date: "2026-11-15",
+      },
+      {
+        id: 23,
+        userName: "Simran Kaur",
+        rating: 4,
+        comment: "Stylish boots. Took a little time to break in.",
+        date: "2026-11-08",
+      },
+    ],
   },
   {
     id: 12,
@@ -135,6 +322,22 @@ const products: Product[] = [
     rating: 4.5,
     description: "Comfortable sports shoes for daily activities.",
     stock: 19,
+    comments: [
+      {
+        id: 24,
+        userName: "Pranav Shah",
+        rating: 5,
+        comment: "Good everyday shoes at a reasonable price.",
+        date: "2026-11-13",
+      },
+      {
+        id: 25,
+        userName: "Divya Menon",
+        rating: 4,
+        comment: "Comfortable and lightweight.",
+        date: "2026-11-04",
+      },
+    ],
   },
   {
     id: 13,
@@ -146,9 +349,27 @@ const products: Product[] = [
     rating: 4.6,
     description: "Versatile loafers with a sophisticated casual look.",
     stock: 10,
+    comments: [
+      {
+        id: 26,
+        userName: "Akash Mehta",
+        rating: 5,
+        comment: "Smart design and comfortable for office wear.",
+        date: "2026-11-17",
+      },
+      {
+        id: 27,
+        userName: "Kavya Iyer",
+        rating: 4,
+        comment: "Nice loafers with a premium appearance.",
+        date: "2026-11-06",
+      },
+    ],
   },
 
+  // =========================================
   // ACCESSORIES
+  // =========================================
   {
     id: 14,
     name: "Luxury Wrist Watch",
@@ -159,6 +380,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "A timeless wristwatch with a premium modern design.",
     stock: 8,
+    comments: [
+      {
+        id: 28,
+        userName: "Rahul Khanna",
+        rating: 5,
+        comment: "Beautiful watch. The finish looks much more expensive.",
+        date: "2026-11-18",
+      },
+      {
+        id: 29,
+        userName: "Nisha Shah",
+        rating: 4,
+        comment: "Elegant design and comfortable strap.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 15,
@@ -170,6 +407,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "A versatile backpack for work, travel and everyday use.",
     stock: 8,
+    comments: [
+      {
+        id: 30,
+        userName: "Saurabh Mishra",
+        rating: 5,
+        comment: "Spacious and practical. Great for office and travel.",
+        date: "2026-11-16",
+      },
+      {
+        id: 31,
+        userName: "Aditi Rao",
+        rating: 5,
+        comment: "Good material and plenty of storage space.",
+        date: "2026-11-10",
+      },
+    ],
   },
   {
     id: 16,
@@ -181,6 +434,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Modern sunglasses with a clean premium look.",
     stock: 17,
+    comments: [
+      {
+        id: 32,
+        userName: "Ishita Kapoor",
+        rating: 5,
+        comment: "Stylish sunglasses with a comfortable fit.",
+        date: "2026-11-14",
+      },
+      {
+        id: 33,
+        userName: "Rakesh Patel",
+        rating: 4,
+        comment: "Good design and value for money.",
+        date: "2026-11-05",
+      },
+    ],
   },
   {
     id: 17,
@@ -192,6 +461,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Compact wallet with a minimalist leather finish.",
     stock: 22,
+    comments: [
+      {
+        id: 34,
+        userName: "Harsh Vora",
+        rating: 5,
+        comment: "Compact and useful. Fits easily into my pocket.",
+        date: "2026-11-15",
+      },
+      {
+        id: 35,
+        userName: "Neel Shah",
+        rating: 4,
+        comment: "Nice minimalist wallet with a good finish.",
+        date: "2026-11-08",
+      },
+    ],
   },
   {
     id: 18,
@@ -204,6 +489,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "A stylish and compact leather wallet with multiple card slots.",
     stock: 20,
+    comments: [
+      {
+        id: 36,
+        userName: "Yash Mehta",
+        rating: 5,
+        comment: "Good storage and a premium-looking finish.",
+        date: "2026-11-19",
+      },
+      {
+        id: 37,
+        userName: "Mihir Joshi",
+        rating: 4,
+        comment: "Useful wallet with enough card slots.",
+        date: "2026-11-09",
+      },
+    ],
   },
   {
     id: 19,
@@ -215,6 +516,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Spacious travel bag for weekend trips and gym sessions.",
     stock: 9,
+    comments: [
+      {
+        id: 38,
+        userName: "Abhishek Jain",
+        rating: 5,
+        comment: "Perfect size for weekend trips. Very spacious.",
+        date: "2026-11-16",
+      },
+      {
+        id: 39,
+        userName: "Ritu Sharma",
+        rating: 4,
+        comment: "Good bag with a nice design and useful compartments.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 20,
@@ -226,9 +543,27 @@ const products: Product[] = [
     rating: 4.7,
     description: "Elegant bracelet designed to complement your style.",
     stock: 14,
+    comments: [
+      {
+        id: 40,
+        userName: "Sanjay Rao",
+        rating: 5,
+        comment: "Looks elegant and has a nice polished finish.",
+        date: "2026-11-12",
+      },
+      {
+        id: 41,
+        userName: "Mansi Patel",
+        rating: 4,
+        comment: "Beautiful accessory for everyday styling.",
+        date: "2026-11-03",
+      },
+    ],
   },
 
+  // =========================================
   // ELECTRONICS
+  // =========================================
   {
     id: 21,
     name: "Wireless Headphones",
@@ -239,6 +574,22 @@ const products: Product[] = [
     rating: 4.9,
     description: "Enjoy your music with comfortable wireless headphones.",
     stock: 12,
+    comments: [
+      {
+        id: 42,
+        userName: "Rohan Kulkarni",
+        rating: 5,
+        comment: "Excellent sound quality and comfortable ear cushions.",
+        date: "2026-11-18",
+      },
+      {
+        id: 43,
+        userName: "Anjali Singh",
+        rating: 5,
+        comment: "Great battery life and impressive audio quality.",
+        date: "2026-11-11",
+      },
+    ],
   },
   {
     id: 22,
@@ -250,6 +601,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Smart wearable with a sleek design for everyday use.",
     stock: 10,
+    comments: [
+      {
+        id: 44,
+        userName: "Kartik Soni",
+        rating: 5,
+        comment: "Looks great and works well for everyday tracking.",
+        date: "2026-11-17",
+      },
+      {
+        id: 45,
+        userName: "Pallavi Desai",
+        rating: 4,
+        comment: "Nice smartwatch with a clean interface.",
+        date: "2026-11-08",
+      },
+    ],
   },
   {
     id: 23,
@@ -261,6 +628,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Compact speaker with rich sound for indoor and outdoor use.",
     stock: 18,
+    comments: [
+      {
+        id: 46,
+        userName: "Varun Bhat",
+        rating: 5,
+        comment: "Surprisingly powerful sound for its size.",
+        date: "2026-11-13",
+      },
+      {
+        id: 47,
+        userName: "Diya Shah",
+        rating: 4,
+        comment: "Portable and easy to use. Good sound quality.",
+        date: "2026-11-06",
+      },
+    ],
   },
   {
     id: 24,
@@ -272,6 +655,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Responsive wireless mouse for gaming and productivity.",
     stock: 21,
+    comments: [
+      {
+        id: 48,
+        userName: "Aman Verma",
+        rating: 5,
+        comment: "Very responsive and comfortable for long gaming sessions.",
+        date: "2026-11-15",
+      },
+      {
+        id: 49,
+        userName: "Riya Kapoor",
+        rating: 4,
+        comment: "Good mouse with a reliable wireless connection.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 25,
@@ -283,6 +682,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Mechanical keyboard with tactile keys and a premium build.",
     stock: 9,
+    comments: [
+      {
+        id: 50,
+        userName: "Siddharth Rao",
+        rating: 5,
+        comment: "Great typing experience and excellent build quality.",
+        date: "2026-11-18",
+      },
+      {
+        id: 51,
+        userName: "Tanvi Mehta",
+        rating: 5,
+        comment: "Love the tactile feedback. Perfect for work.",
+        date: "2026-11-09",
+      },
+    ],
   },
   {
     id: 26,
@@ -294,6 +709,22 @@ const products: Product[] = [
     rating: 4.9,
     description: "Capture memorable moments with this versatile camera.",
     stock: 5,
+    comments: [
+      {
+        id: 52,
+        userName: "Nitin Joshi",
+        rating: 5,
+        comment: "Excellent image quality and easy to operate.",
+        date: "2026-11-14",
+      },
+      {
+        id: 53,
+        userName: "Shruti Nair",
+        rating: 5,
+        comment: "Great camera for travel and everyday photography.",
+        date: "2026-11-05",
+      },
+    ],
   },
   {
     id: 27,
@@ -305,9 +736,27 @@ const products: Product[] = [
     rating: 4.6,
     description: "Compact wireless earbuds for music and calls.",
     stock: 24,
+    comments: [
+      {
+        id: 54,
+        userName: "Deepak Sharma",
+        rating: 5,
+        comment: "Good sound and comfortable fit for daily use.",
+        date: "2026-11-16",
+      },
+      {
+        id: 55,
+        userName: "Sana Khan",
+        rating: 4,
+        comment: "Nice earbuds with good connectivity.",
+        date: "2026-11-08",
+      },
+    ],
   },
 
+  // =========================================
   // HOME & LIVING
+  // =========================================
   {
     id: 28,
     name: "Modern Table Lamp",
@@ -318,6 +767,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Minimal table lamp for a warm and cozy atmosphere.",
     stock: 11,
+    comments: [
+      {
+        id: 56,
+        userName: "Aarohi Shah",
+        rating: 5,
+        comment: "Creates a lovely warm atmosphere in my room.",
+        date: "2026-11-15",
+      },
+      {
+        id: 57,
+        userName: "Keshav Rao",
+        rating: 4,
+        comment: "Minimal design and good lighting.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 29,
@@ -329,6 +794,22 @@ const products: Product[] = [
     rating: 4.5,
     description: "Elegant ceramic mug for your everyday coffee ritual.",
     stock: 30,
+    comments: [
+      {
+        id: 58,
+        userName: "Mukul Jain",
+        rating: 5,
+        comment: "Beautiful mug and comfortable to hold.",
+        date: "2026-11-12",
+      },
+      {
+        id: 59,
+        userName: "Shreya Patel",
+        rating: 4,
+        comment: "Simple and elegant. Good quality ceramic.",
+        date: "2026-11-04",
+      },
+    ],
   },
   {
     id: 30,
@@ -340,6 +821,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Contemporary wall clock for modern interiors.",
     stock: 13,
+    comments: [
+      {
+        id: 60,
+        userName: "Amit Shah",
+        rating: 5,
+        comment: "Looks great on the wall. Clean and modern design.",
+        date: "2026-11-14",
+      },
+      {
+        id: 61,
+        userName: "Radhika Nair",
+        rating: 4,
+        comment: "Nice clock and easy to match with home decor.",
+        date: "2026-11-06",
+      },
+    ],
   },
   {
     id: 31,
@@ -351,6 +848,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Stylish planter to bring a natural touch to your space.",
     stock: 20,
+    comments: [
+      {
+        id: 62,
+        userName: "Megha Joshi",
+        rating: 5,
+        comment: "Looks beautiful with indoor plants. Great finish.",
+        date: "2026-11-18",
+      },
+      {
+        id: 63,
+        userName: "Rajat Singh",
+        rating: 5,
+        comment: "Lovely planter and very good quality.",
+        date: "2026-11-10",
+      },
+    ],
   },
   {
     id: 32,
@@ -362,6 +875,22 @@ const products: Product[] = [
     rating: 4.5,
     description: "Soft decorative cushions for a comfortable living space.",
     stock: 16,
+    comments: [
+      {
+        id: 64,
+        userName: "Ira Kapoor",
+        rating: 5,
+        comment: "Soft and comfortable. Adds a nice touch to my sofa.",
+        date: "2026-11-13",
+      },
+      {
+        id: 65,
+        userName: "Mohit Verma",
+        rating: 4,
+        comment: "Good cushion set with nice colours.",
+        date: "2026-11-05",
+      },
+    ],
   },
   {
     id: 33,
@@ -373,9 +902,27 @@ const products: Product[] = [
     rating: 4.7,
     description: "Decorative ceramic vase with a clean contemporary finish.",
     stock: 14,
+    comments: [
+      {
+        id: 66,
+        userName: "Nandini Shah",
+        rating: 5,
+        comment: "Beautiful vase. Looks elegant on my dining table.",
+        date: "2026-11-17",
+      },
+      {
+        id: 67,
+        userName: "Harshit Patel",
+        rating: 4,
+        comment: "Good design and quality. Looks just like the photos.",
+        date: "2026-11-08",
+      },
+    ],
   },
 
+  // =========================================
   // FITNESS
+  // =========================================
   {
     id: 34,
     name: "Premium Yoga Mat",
@@ -386,6 +933,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Comfortable non-slip yoga mat for daily workouts.",
     stock: 18,
+    comments: [
+      {
+        id: 68,
+        userName: "Ananya Gupta",
+        rating: 5,
+        comment: "Great grip and comfortable cushioning for yoga.",
+        date: "2026-11-16",
+      },
+      {
+        id: 69,
+        userName: "Vivek Rao",
+        rating: 4,
+        comment: "Good quality mat for home workouts.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 35,
@@ -397,6 +960,22 @@ const products: Product[] = [
     rating: 4.8,
     description: "Versatile dumbbells for strength training at home.",
     stock: 7,
+    comments: [
+      {
+        id: 70,
+        userName: "Rishabh Jain",
+        rating: 5,
+        comment: "Very useful for home workouts. Easy to adjust.",
+        date: "2026-11-18",
+      },
+      {
+        id: 71,
+        userName: "Sakshi Mehta",
+        rating: 5,
+        comment: "Good build quality and saves a lot of space.",
+        date: "2026-11-11",
+      },
+    ],
   },
   {
     id: 36,
@@ -408,6 +987,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Reusable insulated bottle for hydration throughout the day.",
     stock: 26,
+    comments: [
+      {
+        id: 72,
+        userName: "Aman Shah",
+        rating: 5,
+        comment: "Keeps water cool and is easy to carry.",
+        date: "2026-11-14",
+      },
+      {
+        id: 73,
+        userName: "Tina Roy",
+        rating: 4,
+        comment: "Good bottle with a nice finish.",
+        date: "2026-11-06",
+      },
+    ],
   },
   {
     id: 37,
@@ -419,6 +1014,22 @@ const products: Product[] = [
     rating: 4.5,
     description: "Multi-resistance workout bands for home fitness training.",
     stock: 32,
+    comments: [
+      {
+        id: 74,
+        userName: "Ravi Kumar",
+        rating: 5,
+        comment: "Useful set for stretching and resistance training.",
+        date: "2026-11-13",
+      },
+      {
+        id: 75,
+        userName: "Priti Shah",
+        rating: 4,
+        comment: "Good value and easy to use at home.",
+        date: "2026-11-05",
+      },
+    ],
   },
   {
     id: 38,
@@ -430,6 +1041,22 @@ const products: Product[] = [
     rating: 4.6,
     description: "Comfortable training gloves for a better gym grip.",
     stock: 15,
+    comments: [
+      {
+        id: 76,
+        userName: "Karan Malhotra",
+        rating: 5,
+        comment: "Comfortable grip and good support during workouts.",
+        date: "2026-11-15",
+      },
+      {
+        id: 77,
+        userName: "Sonia Patel",
+        rating: 4,
+        comment: "Good gloves for regular gym sessions.",
+        date: "2026-11-07",
+      },
+    ],
   },
   {
     id: 39,
@@ -441,6 +1068,22 @@ const products: Product[] = [
     rating: 4.7,
     description: "Spacious gym bag for carrying your workout essentials.",
     stock: 12,
+    comments: [
+      {
+        id: 78,
+        userName: "Siddharth Mehta",
+        rating: 5,
+        comment: "Spacious and easy to carry. Perfect for the gym.",
+        date: "2026-11-17",
+      },
+      {
+        id: 79,
+        userName: "Neha Verma",
+        rating: 4,
+        comment: "Nice bag with enough room for essentials.",
+        date: "2026-11-09",
+      },
+    ],
   },
   {
     id: 40,
@@ -452,6 +1095,22 @@ const products: Product[] = [
     rating: 4.5,
     description: "Minimal digital weighing scale for everyday use.",
     stock: 9,
+    comments: [
+      {
+        id: 80,
+        userName: "Aakash Verma",
+        rating: 5,
+        comment: "Simple to use and gives consistent readings.",
+        date: "2026-11-12",
+      },
+      {
+        id: 81,
+        userName: "Mitali Shah",
+        rating: 4,
+        comment: "Works well and has a clean design.",
+        date: "2026-11-04",
+      },
+    ],
   },
 ];
 

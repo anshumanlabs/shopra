@@ -73,13 +73,14 @@ function About() {
 
             <div className="about-card-bottom">
               <span>DISCOVER</span>
-              <span></span>
+
+              <div className="about-floating-tag">
+                <Sparkles size={16} />
+                <span>SOMETHING</span>
+              </div>
+
               <span>NEW</span>
             </div>
-          </div>
-          <div className="about-floating-tag">
-            <Sparkles size={16} />
-            <span>SOMETHING</span>
           </div>
         </div>
 

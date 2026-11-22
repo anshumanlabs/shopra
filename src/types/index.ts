@@ -1,3 +1,10 @@
+export interface ProductComment {
+  id: number;
+  userName: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
 export interface Product {
   id: number;
   name: string;
@@ -8,6 +15,7 @@ export interface Product {
   rating: number;
   description: string;
   stock?: number;
+  comments: ProductComment[];
 }
 
 export interface CartItem extends Product {

@@ -45,16 +45,18 @@ function Footer() {
           <h4>Subscribe to Newsletter</h4>
           <p>Get the latest updates, new arrivals and exclusive offers.</p>
 
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div className="newsletter-input-group">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <button type="button" onClick={subscribeEmail}>
-            Subscribe
-          </button>
+            <button type="button" onClick={subscribeEmail}>
+              Subscribe
+            </button>
+          </div>
         </div>
       </div>
       <div className="footer-bottom">
