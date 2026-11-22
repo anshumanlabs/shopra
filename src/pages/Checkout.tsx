@@ -7,6 +7,7 @@ import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
 import type { ShippingAddress } from "../types/orders";
 import { validateCard } from "../utils/cardValidator";
+import { orderService } from "../services/orderService";
 
 type SavedAddress = ShippingAddress & {
   id: string;
@@ -179,7 +180,7 @@ function Checkout() {
         setError("Please correct your delivery information.");
         return;
       }
-      // shippingAddress = address;
+      shippingAddress = address;
     } else {
       shippingAddress = selectedAddress;
 
@@ -211,14 +212,35 @@ function Checkout() {
     setLoading(true);
 
     try {
-      const orderId = crypto.randomUUID();
+      const createdOrder = await orderService.create({
+        userId: user.id,
+        items: cart.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          image: item.image,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        shippingAddress,
+        subtotal,
+        discount: 0,
+        shipping,
+        total,
+        orderStatus: "PLACED",
+        paymentStatus: "SUCCESS",
+      });
+
       setCardNumber("");
       setExpiry("");
       setCvv("");
       clearCart();
-      navigate(`/orders/${orderId}`);
+      navigate(`/orders/${createdOrder.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to place your order.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to place your order."
+      );
     } finally {
       setLoading(false);
     }
@@ -261,9 +283,8 @@ function Checkout() {
               <div className="saved-address-list">
                 {savedAddresses.map((item) => (
                   <label
-                    className={`saved-address-option ${
-                      !useNewAddress && selectedAddressId === item.id ? "selected" : ""
-                    }`}
+                    className={`saved-address-option ${!useNewAddress && selectedAddressId === item.id ? "selected" : ""
+                      }`}
                     key={item.id}
                   >
                     <input

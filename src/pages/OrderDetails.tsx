@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Order } from "../types/orders";
+import { orderService } from "../services/orderService";
+import "./OrderDetail.css"
 
 const trackingSteps = ["PLACED", "PROCESSING", "SHIPPED", "DELIVERED"];
 
 function OrderDetails() {
   const { orderId } = useParams();
-  const [order] = useState<Order | null>(null);
+
+  const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -15,15 +18,27 @@ function OrderDetails() {
 
     async function loadOrder() {
       try {
-        if (!orderId) throw new Error("Invalid order ID");
+        if (!orderId) {
+          throw new Error("Invalid order ID");
+        }
 
-        // const result = await orderService.getOrderById(orderId);
+        const result = await orderService.getById(orderId);
 
-        // if (active) setOrder(result);
+        if (!result) {
+          throw new Error("Order not found");
+        }
+
+        if (active) {
+          setOrder(result);
+        }
       } catch {
-        if (active) setError("Order not found.");
+        if (active) {
+          setError("Order not found.");
+        }
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     }
 
@@ -60,7 +75,10 @@ function OrderDetails() {
         ) : (
           <ol>
             {trackingSteps.map((step, index) => (
-              <li key={step} className={index <= currentStep ? "completed" : ""}>
+              <li
+                key={step}
+                className={index <= currentStep ? "completed" : ""}
+              >
                 {step}
               </li>
             ))}
@@ -74,10 +92,14 @@ function OrderDetails() {
         {order.items.map((item) => (
           <div key={item.productId} className="order-detail-item">
             <img src={item.image} alt={item.name} />
+
             <span>
               {item.name} × {item.quantity}
             </span>
-            <strong>₹{(item.price * item.quantity).toLocaleString("en-IN")}</strong>
+
+            <strong>
+              ₹{(item.price * item.quantity).toLocaleString("en-IN")}
+            </strong>
           </div>
         ))}
       </section>

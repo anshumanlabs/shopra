@@ -3,30 +3,47 @@ import { Link } from "react-router-dom";
 import { Package, ArrowRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import type { Order } from "../types/orders";
+import { orderService } from "../services/orderService";
 import "./Orders.css";
 
 function Orders() {
   const { user } = useAuth();
-  const [orders] = useState<Order[]>([]);
+
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
+
     async function loadOrders() {
       if (!user) {
+        setOrders([]);
         setLoading(false);
         return;
       }
 
       try {
-        // const result = await orderService.getOrders(user.id);
+        setLoading(true);
+        setError("");
 
-        // if (active) setOrders(result);
-      } catch {
-        if (active) setError("Unable to load your orders.");
+        const result = await orderService.getAll(user.id);
+
+        if (active) {
+          setOrders(result);
+        }
+      } catch (err) {
+        if (active) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Unable to load your orders."
+          );
+        }
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     }
 
@@ -58,11 +75,19 @@ function Orders() {
             <article className="order-card" key={order.id}>
               <div>
                 <span>Order #{order.id.slice(0, 8)}</span>
-                <h3>₹{order.total.toLocaleString("en-IN")}</h3>
-                <p>{new Date(order.createdAt).toLocaleDateString("en-IN")}</p>
+
+                <h3>
+                  ₹{order.total.toLocaleString("en-IN")}
+                </h3>
+
+                <p>
+                  {new Date(order.createdAt).toLocaleDateString("en-IN")}
+                </p>
+
                 <p>
                   Payment: <strong>{order.paymentStatus}</strong>
                 </p>
+
                 <p>
                   Order status: <strong>{order.orderStatus}</strong>
                 </p>

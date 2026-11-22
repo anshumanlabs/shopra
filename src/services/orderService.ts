@@ -31,7 +31,10 @@ export const orderService = {
     return apiClient.get<Order>(`/orders/${id}`, token);
   },
 
-  async create(order: Omit<Order, "id" | "createdAt">, token?: string): Promise<Order> {
+  async create(
+    order: Omit<Order, "id" | "createdAt">,
+    token?: string
+  ): Promise<Order> {
     if (env.isLocal) {
       const orders = storageService.get<Order[]>(STORAGE_KEY, []);
 
