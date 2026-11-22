@@ -1,10 +1,5 @@
-
 import { ArrowUp } from "lucide-react";
-import {
-  FaInstagram,
-  FaFacebookF,
-  FaXTwitter,
-} from "react-icons/fa6";
+import { FaInstagram, FaFacebookF, FaXTwitter } from "react-icons/fa6";
 
 import { Link } from "react-router-dom";
 import "./Footer.css";
@@ -18,9 +13,7 @@ function Footer() {
             SHOP<span>ORA.</span>
           </Link>
 
-          <p>
-            Your World. Your Shopping. Discover a better shopping experience.
-          </p>
+          <p>Your World. Your Shopping. Discover a better shopping experience.</p>
 
           <div className="social-links">
             <a href="https://instagram.com" aria-label="Instagram">

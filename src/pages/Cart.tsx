@@ -117,12 +117,9 @@ function Cart() {
             <h2>{formatPrice(subtotal)}</h2>
           </div>
 
-          <button
-            className="checkout-btn"
-            onClick={() => alert("Checkout will be implemented in the next module.")}
-          >
+          <Link to="/checkout" className="checkout-btn">
             Proceed to Checkout <ArrowRight size={18} />
-          </button>
+          </Link>
 
           <Link to="/shop" className="continue-shopping">
             Continue Shopping

@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserRound, Mail, LogOut, ShoppingBag } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import "./Profile.css";
+import { Button } from "@mui/material";
 
 function Profile() {
   const { user, logout } = useAuth();
@@ -37,10 +38,14 @@ function Profile() {
             <Mail size={18} />
             <span>{user.email}</span>
           </div>
-
-          <button className="auth-submit" onClick={handleLogout}>
-            <LogOut size={18} /> Logout
-          </button>
+          <Button
+            onClick={handleLogout}
+            variant="contained"
+            color="error"
+            startIcon={<LogOut size={18} />}
+          >
+            Logout
+          </Button>
         </section>
 
         <section className="profile-card profile-actions">

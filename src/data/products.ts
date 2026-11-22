@@ -199,7 +199,8 @@ const products: Product[] = [
     category: "Accessories",
     price: 899,
     oldPrice: 1299,
-    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=80",
+    image:
+      "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=80",
     rating: 4.7,
     description: "A stylish and compact leather wallet with multiple card slots.",
     stock: 20,
