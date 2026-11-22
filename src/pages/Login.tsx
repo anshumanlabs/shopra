@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, LockKeyhole, Mail, ArrowRight } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  Mail,
+  ArrowRight,
+} from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 
@@ -8,21 +15,34 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setSubmitting(true);
 
-    const success = login(email, password);
+    try {
+      await login({
+        email: email.trim(),
+        password,
+        rememberMe,
+      });
 
-    if (success) {
-      navigate("/profile");
-    } else {
-      setError("Invalid email or password. Please try again.");
+      navigate("/profile", { replace: true });
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to login. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -43,6 +63,7 @@ function Login() {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label htmlFor="login-email">Email address</label>
+
           <div className="auth-input">
             <Mail size={19} />
             <input
@@ -51,16 +72,20 @@ function Login() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
           </div>
 
           <div className="auth-label-row">
             <label htmlFor="login-password">Password</label>
+
             <button
               type="button"
               className="auth-text-button"
-              onClick={() => setError("Password reset is not implemented yet.")}
+              onClick={() =>
+                setError("Password reset is not implemented yet.")
+              }
             >
               Forgot password?
             </button>
@@ -68,14 +93,17 @@ function Login() {
 
           <div className="auth-input">
             <LockKeyhole size={19} />
+
             <input
               id="login-password"
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
               required
             />
+
             <button
               type="button"
               className="password-toggle"
@@ -89,12 +117,21 @@ function Login() {
           {error && <p className="auth-error">{error}</p>}
 
           <label className="auth-checkbox">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
             <span>Remember me</span>
           </label>
 
-          <button type="submit" className="auth-submit">
-            Sign In <ArrowRight size={18} />
+          <button
+            type="submit"
+            className="auth-submit"
+            disabled={submitting}
+          >
+            {submitting ? "Signing in..." : "Sign In"}
+            {!submitting && <ArrowRight size={18} />}
           </button>
         </form>
 

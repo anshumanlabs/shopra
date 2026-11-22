@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserRound, Mail, LockKeyhole, Eye, EyeOff, ArrowRight } from "lucide-react";
+import {
+  UserRound,
+  Mail,
+  LockKeyhole,
+  Eye,
+  EyeOff,
+  ArrowRight,
+} from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 
@@ -12,12 +20,14 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
@@ -31,14 +41,25 @@ function Signup() {
       return;
     }
 
-    const success = signup(name, email, password);
+    setSubmitting(true);
 
-    if (!success) {
-      setError("An account with this email already exists.");
-      return;
+    try {
+      await signup({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      });
+
+      navigate("/profile", { replace: true });
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to create your account. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
-
-    navigate("/profile");
   };
 
   return (
@@ -58,6 +79,7 @@ function Signup() {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label htmlFor="signup-name">Full name</label>
+
           <div className="auth-input">
             <UserRound size={19} />
             <input
@@ -66,11 +88,13 @@ function Signup() {
               placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              autoComplete="name"
               required
             />
           </div>
 
           <label htmlFor="signup-email">Email address</label>
+
           <div className="auth-input">
             <Mail size={19} />
             <input
@@ -79,11 +103,13 @@ function Signup() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
           </div>
 
           <label htmlFor="signup-password">Password</label>
+
           <div className="auth-input">
             <LockKeyhole size={19} />
             <input
@@ -92,9 +118,11 @@ function Signup() {
               placeholder="Create a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
               minLength={8}
               required
             />
+
             <button
               type="button"
               className="password-toggle"
@@ -106,6 +134,7 @@ function Signup() {
           </div>
 
           <label htmlFor="confirm-password">Confirm password</label>
+
           <div className="auth-input">
             <LockKeyhole size={19} />
             <input
@@ -114,15 +143,23 @@ function Signup() {
               placeholder="Confirm your password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
               required
             />
+
             <button
               type="button"
               className="password-toggle"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              onClick={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
               aria-label="Toggle confirm password visibility"
             >
-              {showConfirmPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+              {showConfirmPassword ? (
+                <EyeOff size={19} />
+              ) : (
+                <Eye size={19} />
+              )}
             </button>
           </div>
 
@@ -133,8 +170,13 @@ function Signup() {
             <span>I agree to the Terms & Conditions</span>
           </label>
 
-          <button type="submit" className="auth-submit">
-            Create Account <ArrowRight size={18} />
+          <button
+            type="submit"
+            className="auth-submit"
+            disabled={submitting}
+          >
+            {submitting ? "Creating account..." : "Create Account"}
+            {!submitting && <ArrowRight size={18} />}
           </button>
         </form>
 

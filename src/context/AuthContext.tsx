@@ -1,111 +1,122 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "CUSTOMER" | "ADMIN";
-}
+import { authService } from "../services/authService";
 
-interface StoredUser extends User {
-  password: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => boolean;
-  signup: (name: string, email: string, password: string) => boolean;
-  logout: () => void;
-}
+import type {
+  AuthContextType,
+  AuthUser,
+  LoginRequest,
+  RegisterRequest,
+} from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USERS_KEY = "shopora_users";
-const SESSION_KEY = "shopora_session";
+const TOKEN_KEY = "shopora_access_token";
+const USER_KEY = "shopora_user";
+
+const SESSION_TOKEN_KEY = "shopora_session_token";
+const SESSION_USER_KEY = "shopora_session_user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedSession = localStorage.getItem(SESSION_KEY);
+    const token =
+      localStorage.getItem(TOKEN_KEY) ||
+      sessionStorage.getItem(SESSION_TOKEN_KEY);
 
-    if (savedSession) {
+    const savedUser =
+      localStorage.getItem(USER_KEY) ||
+      sessionStorage.getItem(SESSION_USER_KEY);
+
+    if (token && savedUser) {
       try {
-        setUser(JSON.parse(savedSession) as User);
+        setAccessToken(token);
+        setUser(JSON.parse(savedUser) as AuthUser);
       } catch {
-        localStorage.removeItem(SESSION_KEY);
+        clearSession();
       }
     }
+
+    setLoading(false);
   }, []);
 
-  const getUsers = (): StoredUser[] => {
-    try {
-      return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
-    } catch {
-      return [];
-    }
+  const clearSession = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(SESSION_USER_KEY);
+
+    setAccessToken(null);
+    setUser(null);
   };
 
-  const login = (email: string, password: string): boolean => {
-    const users = getUsers();
+  const saveSession = (
+    token: string,
+    authenticatedUser: AuthUser,
+    rememberMe: boolean
+  ) => {
+    clearSession();
 
-    const existingUser = users.find(
-      (item) =>
-        item.email.toLowerCase() === email.trim().toLowerCase() && item.password === password
+    const storage = rememberMe ? localStorage : sessionStorage;
+
+    const tokenKey = rememberMe ? TOKEN_KEY : SESSION_TOKEN_KEY;
+    const userKey = rememberMe ? USER_KEY : SESSION_USER_KEY;
+
+    storage.setItem(tokenKey, token);
+    storage.setItem(userKey, JSON.stringify(authenticatedUser));
+
+    setAccessToken(token);
+    setUser(authenticatedUser);
+  };
+
+  const login = async (request: LoginRequest) => {
+    const response = await authService.login(request);
+
+    if (!response.accessToken || !response.user) {
+      throw new Error("Invalid login response from server.");
+    }
+
+    saveSession(
+      response.accessToken,
+      response.user,
+      request.rememberMe
     );
-
-    if (!existingUser) {
-      return false;
-    }
-
-    const { password: _password, ...safeUser } = existingUser;
-
-    setUser(safeUser);
-    localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser));
-
-    return true;
   };
 
-  const signup = (name: string, email: string, password: string): boolean => {
-    const users = getUsers();
+  const signup = async (request: RegisterRequest) => {
+    const response = await authService.register(request);
 
-    const normalizedEmail = email.trim().toLowerCase();
-
-    const alreadyExists = users.some((item) => item.email.toLowerCase() === normalizedEmail);
-
-    if (alreadyExists) {
-      return false;
+    if (!response.accessToken || !response.user) {
+      throw new Error(
+        "Registration succeeded, but the server did not return an authentication token and user."
+      );
     }
 
-    const newUser: StoredUser = {
-      id: crypto.randomUUID(),
-      name: name.trim(),
-      email: normalizedEmail,
-      password,
-      role: "CUSTOMER",
-    };
-
-    localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]));
-
-    const { password: _password, ...safeUser } = newUser;
-
-    setUser(safeUser);
-    localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser));
-
-    return true;
+    saveSession(response.accessToken, response.user, true);
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem(SESSION_KEY);
+    // Backend logout/revocation API is not implemented yet.
+    clearSession();
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: Boolean(user),
+        accessToken,
+        isAuthenticated: Boolean(accessToken && user),
+        loading,
         login,
         signup,
         logout,
