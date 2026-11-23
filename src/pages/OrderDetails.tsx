@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import type { Order } from "../types/orders";
 import { orderService } from "../services/orderService";
 import "./OrderDetail.css";
+import { getProductImage } from "../utils/images";
 
 const trackingSteps = ["PLACED", "PROCESSING", "SHIPPED", "DELIVERED"];
 
@@ -88,7 +89,7 @@ function OrderDetails() {
 
         {order.items.map((item) => (
           <div key={item.productId} className="order-detail-item">
-            <img src={item.image} alt={item.name} />
+            <img src={getProductImage(item.image)} alt={item.name} />
 
             <span>
               {item.name} × {item.quantity}

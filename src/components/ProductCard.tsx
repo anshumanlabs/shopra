@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
 import type { Product } from "../types";
 import "./ProductCard.css";
+import { getProductImage } from "../utils/images";
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +18,7 @@ function ProductCard({ product }: ProductCardProps) {
     <div className="product-card">
       <div className="product-image">
         <Link to={`/products/${product.id}`} aria-label={`View ${product.name}`}>
-          <img src={product.image} alt={product.name} loading="lazy" />
+          <img src={getProductImage(product.image)} alt={product.name} loading="lazy" />
         </Link>
 
         <button

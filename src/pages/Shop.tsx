@@ -64,10 +64,6 @@ function Shop() {
     return result;
   }, [category, debouncedSearch, minPrice, maxPrice, sort]);
 
-  // useEffect(() => {
-  //   setPage(1);
-  // }, [category, debouncedSearch, minPrice, maxPrice, sort]);
-
   const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
   const paginatedProducts = filteredProducts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);

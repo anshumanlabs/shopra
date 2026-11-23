@@ -1,6 +1,7 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./Hero.css";
+import { getProductImage } from "../utils/images";
 
 function Hero() {
   return (
@@ -49,7 +50,7 @@ function Hero() {
 
       <div className="hero-image">
         <img
-          src="https://shop-468058260212-eu-north-1-an.s3.eu-north-1.amazonaws.com/photo-1490481651871-ab68de25d43d.jpg"
+          src={getProductImage("photo-1490481651871-ab68de25d43d")}
           alt="SHOPORA fashion collection"
         />
 

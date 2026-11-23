@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import type { ShippingAddress } from "../types/orders";
 import { validateCard } from "../utils/cardValidator";
 import { orderService } from "../services/orderService";
+import { getProductImage } from "../utils/images";
 
 type SavedAddress = ShippingAddress & {
   id: string;
@@ -470,7 +471,7 @@ function Checkout() {
             {cart.map((item) => (
               <div className="checkout-summary-item" key={item.id}>
                 <div className="checkout-product-info">
-                  <img src={item.image} alt={item.name} />
+                  <img src={getProductImage(item.image)} alt={item.name} />
                   <div>
                     <span>{item.name}</span>
                     <small>Qty: {item.quantity}</small>

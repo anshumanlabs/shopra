@@ -5,9 +5,26 @@ export interface ProductComment {
   comment: string;
   date: string;
 }
+
+export interface SellerDetails {
+  id: string;
+  name: string;
+  businessName: string;
+  gstin: string;
+  rating: number;
+  totalReviews: number;
+  location: string;
+  supportEmail: string;
+  supportPhone: string;
+  verified: boolean;
+  dispatchTime: string;
+}
+
 export interface Product {
   id: number;
   name: string;
+  companyName: string;
+  sku: string;
   category: string;
   price: number;
   oldPrice: number;
@@ -15,6 +32,8 @@ export interface Product {
   rating: number;
   description: string;
   stock?: number;
+  warranty: string;
+  seller: SellerDetails;
   comments: ProductComment[];
 }
 

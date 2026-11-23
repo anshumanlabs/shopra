@@ -17,6 +17,7 @@ import products from "../data/products";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
 import "./ProductDetails.css";
+import { getProductImage } from "../utils/images";
 
 interface ProductReview {
   id: string;
@@ -235,7 +236,7 @@ function ProductDetailsContent() {
 
       <div className="product-details-grid">
         <div className="product-details-image">
-          <img src={product.image} alt={product.name} />
+          <img src={getProductImage(product.image)} alt={product.name} />
 
           <span className="discount-badge">SPECIAL OFFER</span>
         </div>

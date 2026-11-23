@@ -3,6 +3,7 @@ import { ShoppingBag, Trash2, ArrowRight, Minus, Plus } from "lucide-react";
 
 import { useShop } from "../context/ShopContext";
 import "./Cart.css";
+import { getProductImage } from "../utils/images";
 
 function Cart() {
   const { cart, updateQuantity, removeFromCart, clearCart } = useShop();
@@ -44,7 +45,7 @@ function Cart() {
           {cart.map((item) => (
             <article className="cart-item" key={item.id}>
               <Link to={`/products/${item.id}`}>
-                <img src={item.image} alt={item.name} />
+                <img src={getProductImage(item.image)} alt={item.name} />
               </Link>
 
               <div className="cart-item-info">
