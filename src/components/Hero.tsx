@@ -49,7 +49,7 @@ function Hero() {
 
       <div className="hero-image">
         <img
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1000"
+          src="https://shop-468058260212-eu-north-1-an.s3.eu-north-1.amazonaws.com/photo-1490481651871-ab68de25d43d.jpg"
           alt="SHOPORA fashion collection"
         />
 

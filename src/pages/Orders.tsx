@@ -34,11 +34,7 @@ function Orders() {
         }
       } catch (err) {
         if (active) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "Unable to load your orders."
-          );
+          setError(err instanceof Error ? err.message : "Unable to load your orders.");
         }
       } finally {
         if (active) {
@@ -76,13 +72,9 @@ function Orders() {
               <div>
                 <span>Order #{order.id.slice(0, 8)}</span>
 
-                <h3>
-                  ₹{order.total.toLocaleString("en-IN")}
-                </h3>
+                <h3>₹{order.total.toLocaleString("en-IN")}</h3>
 
-                <p>
-                  {new Date(order.createdAt).toLocaleDateString("en-IN")}
-                </p>
+                <p>{new Date(order.createdAt).toLocaleDateString("en-IN")}</p>
 
                 <p>
                   Payment: <strong>{order.paymentStatus}</strong>

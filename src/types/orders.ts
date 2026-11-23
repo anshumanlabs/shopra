@@ -13,12 +13,7 @@ export interface SavedAddress extends ShippingAddress {
   isDefault: boolean;
 }
 
-export type OrderStatus =
-  | "PLACED"
-  | "PROCESSING"
-  | "SHIPPED"
-  | "DELIVERED"
-  | "CANCELLED";
+export type OrderStatus = "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
 
 export type PaymentStatus = "PENDING" | "SUCCESS" | "FAILED";
 

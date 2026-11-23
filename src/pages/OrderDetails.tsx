@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Order } from "../types/orders";
 import { orderService } from "../services/orderService";
-import "./OrderDetail.css"
+import "./OrderDetail.css";
 
 const trackingSteps = ["PLACED", "PROCESSING", "SHIPPED", "DELIVERED"];
 
@@ -75,10 +75,7 @@ function OrderDetails() {
         ) : (
           <ol>
             {trackingSteps.map((step, index) => (
-              <li
-                key={step}
-                className={index <= currentStep ? "completed" : ""}
-              >
+              <li key={step} className={index <= currentStep ? "completed" : ""}>
                 {step}
               </li>
             ))}
@@ -97,9 +94,7 @@ function OrderDetails() {
               {item.name} × {item.quantity}
             </span>
 
-            <strong>
-              ₹{(item.price * item.quantity).toLocaleString("en-IN")}
-            </strong>
+            <strong>₹{(item.price * item.quantity).toLocaleString("en-IN")}</strong>
           </div>
         ))}
       </section>

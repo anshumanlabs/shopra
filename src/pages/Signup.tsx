@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  UserRound,
-  Mail,
-  LockKeyhole,
-  Eye,
-  EyeOff,
-  ArrowRight,
-} from "lucide-react";
+import { UserRound, Mail, LockKeyhole, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
@@ -53,9 +46,7 @@ function Signup() {
       navigate("/profile", { replace: true });
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to create your account. Please try again."
+        err instanceof Error ? err.message : "Unable to create your account. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -150,16 +141,10 @@ function Signup() {
             <button
               type="button"
               className="password-toggle"
-              onClick={() =>
-                setShowConfirmPassword(!showConfirmPassword)
-              }
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               aria-label="Toggle confirm password visibility"
             >
-              {showConfirmPassword ? (
-                <EyeOff size={19} />
-              ) : (
-                <Eye size={19} />
-              )}
+              {showConfirmPassword ? <EyeOff size={19} /> : <Eye size={19} />}
             </button>
           </div>
 
@@ -170,11 +155,7 @@ function Signup() {
             <span>I agree to the Terms & Conditions</span>
           </label>
 
-          <button
-            type="submit"
-            className="auth-submit"
-            disabled={submitting}
-          >
+          <button type="submit" className="auth-submit" disabled={submitting}>
             {submitting ? "Creating account..." : "Create Account"}
             {!submitting && <ArrowRight size={18} />}
           </button>

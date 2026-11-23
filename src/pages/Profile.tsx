@@ -51,7 +51,7 @@ function Profile() {
     address: "",
     city: "",
     state: "",
-    pincode: ""
+    pincode: "",
   };
 
   const [form, setForm] = useState<ShippingAddress>(initialAddress);
@@ -88,7 +88,7 @@ function Profile() {
       address: form.address.trim(),
       city: form.city.trim(),
       state: form.state.trim(),
-      pincode: form.pincode.trim()
+      pincode: form.pincode.trim(),
     };
 
     if (!/^[6-9]\d{9}$/.test(cleanedAddress.phone)) {

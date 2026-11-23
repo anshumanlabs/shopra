@@ -1,10 +1,4 @@
-
-import type {
-  AuthResponse,
-  AuthUser,
-  LoginRequest,
-  RegisterRequest,
-} from "../types/auth";
+import type { AuthResponse, AuthUser, LoginRequest, RegisterRequest } from "../types/auth";
 
 import { env } from "../config/env";
 
@@ -21,19 +15,12 @@ interface LocalUser {
   passwordSalt: string;
 }
 
-async function hashPassword(
-  password: string,
-  salt: string
-): Promise<string> {
+async function hashPassword(password: string, salt: string): Promise<string> {
   const encoder = new TextEncoder();
 
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits"]
-  );
+  const key = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, [
+    "deriveBits",
+  ]);
 
   const hash = await crypto.subtle.deriveBits(
     {
@@ -64,9 +51,7 @@ function generateSalt(): string {
 
 function getLocalUsers(): LocalUser[] {
   try {
-    return JSON.parse(
-      localStorage.getItem(USERS_KEY) || "[]"
-    ) as LocalUser[];
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]") as LocalUser[];
   } catch {
     return [];
   }
@@ -114,9 +99,7 @@ async function apiRequest(
     } | null;
 
     throw new Error(
-      errorData?.message ||
-      errorData?.error ||
-      `Request failed with status ${response.status}`
+      errorData?.message || errorData?.error || `Request failed with status ${response.status}`
     );
   }
 
@@ -132,9 +115,7 @@ export const authService = {
     const users = getLocalUsers();
     const email = request.email.trim().toLowerCase();
 
-    const existingUser = users.find(
-      (user) => user.email === email
-    );
+    const existingUser = users.find((user) => user.email === email);
 
     if (existingUser) {
       throw new Error("An account with this email already exists.");
@@ -166,18 +147,13 @@ export const authService = {
     const email = request.email.trim().toLowerCase();
     const users = getLocalUsers();
 
-    const user = users.find(
-      (item) => item.email === email
-    );
+    const user = users.find((item) => item.email === email);
 
     if (!user) {
       throw new Error("Invalid email or password.");
     }
 
-    const passwordHash = await hashPassword(
-      request.password,
-      user.passwordSalt
-    );
+    const passwordHash = await hashPassword(request.password, user.passwordSalt);
 
     if (passwordHash !== user.passwordHash) {
       throw new Error("Invalid email or password.");

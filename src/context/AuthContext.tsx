@@ -1,19 +1,8 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 import { authService } from "../services/authService";
 
-import type {
-  AuthContextType,
-  AuthUser,
-  LoginRequest,
-  RegisterRequest,
-} from "../types/auth";
+import type { AuthContextType, AuthUser, LoginRequest, RegisterRequest } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -29,13 +18,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token =
-      localStorage.getItem(TOKEN_KEY) ||
-      sessionStorage.getItem(SESSION_TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(SESSION_TOKEN_KEY);
 
-    const savedUser =
-      localStorage.getItem(USER_KEY) ||
-      sessionStorage.getItem(SESSION_USER_KEY);
+    const savedUser = localStorage.getItem(USER_KEY) || sessionStorage.getItem(SESSION_USER_KEY);
 
     if (token && savedUser) {
       try {
@@ -60,11 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  const saveSession = (
-    token: string,
-    authenticatedUser: AuthUser,
-    rememberMe: boolean
-  ) => {
+  const saveSession = (token: string, authenticatedUser: AuthUser, rememberMe: boolean) => {
     clearSession();
 
     const storage = rememberMe ? localStorage : sessionStorage;
@@ -86,11 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("Invalid login response from server.");
     }
 
-    saveSession(
-      response.accessToken,
-      response.user,
-      request.rememberMe
-    );
+    saveSession(response.accessToken, response.user, request.rememberMe);
   };
 
   const signup = async (request: RegisterRequest) => {

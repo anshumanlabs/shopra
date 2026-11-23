@@ -1,4 +1,3 @@
-
 /* =========================================
    ORDER DETAILS PAGE
 ========================================= */
@@ -139,7 +138,9 @@
   text-decoration: none;
   font-size: 14px;
   font-weight: 650;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .order-details-page > a:hover {

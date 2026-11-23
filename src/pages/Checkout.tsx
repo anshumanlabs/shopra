@@ -236,11 +236,7 @@ function Checkout() {
       clearCart();
       navigate(`/orders/${createdOrder.id}`);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to place your order."
-      );
+      setError(err instanceof Error ? err.message : "Unable to place your order.");
     } finally {
       setLoading(false);
     }
@@ -283,8 +279,9 @@ function Checkout() {
               <div className="saved-address-list">
                 {savedAddresses.map((item) => (
                   <label
-                    className={`saved-address-option ${!useNewAddress && selectedAddressId === item.id ? "selected" : ""
-                      }`}
+                    className={`saved-address-option ${
+                      !useNewAddress && selectedAddressId === item.id ? "selected" : ""
+                    }`}
                     key={item.id}
                   >
                     <input

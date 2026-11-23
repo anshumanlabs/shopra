@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Eye,
-  EyeOff,
-  LockKeyhole,
-  Mail,
-  ArrowRight,
-} from "lucide-react";
+import { Eye, EyeOff, LockKeyhole, Mail, ArrowRight } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
@@ -36,11 +30,7 @@ function Login() {
 
       navigate("/profile", { replace: true });
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to login. Please try again."
-      );
+      setError(err instanceof Error ? err.message : "Unable to login. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -83,9 +73,7 @@ function Login() {
             <button
               type="button"
               className="auth-text-button"
-              onClick={() =>
-                setError("Password reset is not implemented yet.")
-              }
+              onClick={() => setError("Password reset is not implemented yet.")}
             >
               Forgot password?
             </button>
@@ -125,11 +113,7 @@ function Login() {
             <span>Remember me</span>
           </label>
 
-          <button
-            type="submit"
-            className="auth-submit"
-            disabled={submitting}
-          >
+          <button type="submit" className="auth-submit" disabled={submitting}>
             {submitting ? "Signing in..." : "Sign In"}
             {!submitting && <ArrowRight size={18} />}
           </button>

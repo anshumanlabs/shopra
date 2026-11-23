@@ -9,11 +9,7 @@ function ProtectedRoute() {
     return <Loader />;
   }
 
-  return isAuthenticated ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoute;
