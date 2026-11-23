@@ -48,11 +48,11 @@ function ProductDetailsContent() {
 
       return product
         ? product.comments.map((comment) => ({
-            ...comment,
-            productId: product.id,
-            userId: `demo-${comment.id}`,
-            createdAt: comment.date,
-          }))
+          ...comment,
+          productId: product.id,
+          userId: `demo-${comment.id}`,
+          createdAt: comment.date,
+        }))
         : [];
     } catch {
       return [];
@@ -326,6 +326,134 @@ function ProductDetailsContent() {
           </div>
         </section>
       </div>
+      {/* PRODUCT INFORMATION */}
+      <section className="product-information-section">
+        <div className="product-information-card">
+          <span className="reviews-eyebrow">PRODUCT SPECIFICATIONS</span>
+          <h2>Product Information</h2>
+
+          <div className="product-information-grid">
+            <div>
+              <span>Product Name</span>
+              <strong>{product.name}</strong>
+            </div>
+
+            <div>
+              <span>Company Name</span>
+              <strong>{product.companyName}</strong>
+            </div>
+
+            <div>
+              <span>SKU</span>
+              <strong>{product.sku}</strong>
+            </div>
+
+            <div>
+              <span>Category</span>
+              <strong>{product.category}</strong>
+            </div>
+
+            <div>
+              <span>Product Price</span>
+              <strong>₹{product.price.toLocaleString("en-IN")}</strong>
+            </div>
+
+            <div>
+              <span>Original Price</span>
+              <strong>₹{product.oldPrice.toLocaleString("en-IN")}</strong>
+            </div>
+
+            <div>
+              <span>Available Stock</span>
+              <strong>{product.stock} units</strong>
+            </div>
+
+            <div>
+              <span>Warranty</span>
+              <strong>{product.warranty}</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* SELLER INFORMATION */}
+        <div className="seller-information-card">
+          <div className="seller-information-heading">
+            <div>
+              <span className="reviews-eyebrow">TRUSTED SELLER</span>
+              <h2>Seller Information</h2>
+            </div>
+
+            {product.seller.verified && (
+              <span className="verified-seller">✓ Verified Seller</span>
+            )}
+          </div>
+
+          <div className="seller-information-grid">
+            <div>
+              <span>Seller Name</span>
+              <strong>{product.seller.name}</strong>
+            </div>
+
+            <div>
+              <span>Business Name</span>
+              <strong>{product.seller.businessName}</strong>
+            </div>
+
+            <div>
+              <span>Seller ID</span>
+              <strong>{product.seller.id}</strong>
+            </div>
+
+            <div>
+              <span>GSTIN</span>
+              <strong>{product.seller.gstin}</strong>
+            </div>
+
+            <div>
+              <span>Seller Rating</span>
+              <strong>
+                <Star size={15} fill="#f5c542" color="#f5c542" />
+                {product.seller.rating.toFixed(1)} / 5
+              </strong>
+            </div>
+
+            <div>
+              <span>Total Seller Reviews</span>
+              <strong>
+                {product.seller.totalReviews.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div>
+              <span>Location</span>
+              <strong>{product.seller.location}</strong>
+            </div>
+
+            <div>
+              <span>Dispatch Time</span>
+              <strong>{product.seller.dispatchTime}</strong>
+            </div>
+
+            <div>
+              <span>Support Email</span>
+              <strong>
+                <a href={`mailto:${product.seller.supportEmail}`}>
+                  {product.seller.supportEmail}
+                </a>
+              </strong>
+            </div>
+
+            <div>
+              <span>Support Phone</span>
+              <strong>
+                <a href={`tel:${product.seller.supportPhone}`}>
+                  {product.seller.supportPhone}
+                </a>
+              </strong>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="product-reviews-section">
         {/* SECTION HEADER */}
@@ -449,13 +577,12 @@ function ProductDetailsContent() {
 
           {message && (
             <p
-              className={`review-feedback ${
-                message.includes("successfully") ||
-                message.includes("Thank you") ||
-                message.includes("deleted")
+              className={`review-feedback ${message.includes("successfully") ||
+                  message.includes("Thank you") ||
+                  message.includes("deleted")
                   ? "success"
                   : "error"
-              }`}
+                }`}
               role="status"
             >
               {message}

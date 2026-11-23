@@ -1,4 +1,4 @@
-import { ArrowUp } from "lucide-react";
+import { ArrowUp} from "lucide-react";
 import { FaInstagram, FaFacebookF, FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import "./Footer.css";
@@ -41,23 +41,32 @@ function Footer() {
           <Link to="/about">About Us</Link>
           <Link to="/contact">Contact Us</Link>
         </div>
+
         <div className="footer-newsletter">
           <h4>Subscribe to Newsletter</h4>
           <p>Get the latest updates, new arrivals and exclusive offers.</p>
 
-          <div className="newsletter-input-group">
+          <form
+            className="newsletter-input-group"
+            onSubmit={(e) => {
+              e.preventDefault();
+              subscribeEmail();
+            }}
+          >
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              aria-label="Email address"
+              required
             />
-
-            <button type="button" onClick={subscribeEmail}>
+            <button type="submit">
               Subscribe
             </button>
-          </div>
+          </form>
         </div>
+
       </div>
       <div className="footer-bottom">
         <span>© 2026 SHOPORA. All rights reserved.</span>
