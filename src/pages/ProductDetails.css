@@ -995,3 +995,61 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================================
+   ADD TO CART - APP THEME
+========================================= */
+
+.product-details-content .add-to-cart-btn {
+  flex: 1;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 14px 22px;
+  border: 1px solid var(--purple);
+  border-radius: 5px;
+
+  background: var(--purple);
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.product-details-content .add-to-cart-btn:hover:not(:disabled) {
+  background: transparent;
+  color: var(--purple);
+  border-color: var(--purple);
+  transform: translateY(-2px);
+}
+
+.product-details-content .add-to-cart-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.product-details-content .add-to-cart-btn svg {
+  flex-shrink: 0;
+}
+
+.product-details-content .details-wishlist {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.product-details-content .details-wishlist:hover,
+.product-details-content .details-wishlist.active {
+  color: var(--purple);
+  border-color: var(--purple);
+  background: var(--surface);
+}

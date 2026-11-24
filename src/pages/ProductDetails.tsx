@@ -48,11 +48,11 @@ function ProductDetailsContent() {
 
       return product
         ? product.comments.map((comment) => ({
-            ...comment,
-            productId: product.id,
-            userId: `demo-${comment.id}`,
-            createdAt: comment.date,
-          }))
+          ...comment,
+          productId: product.id,
+          userId: `demo-${comment.id}`,
+          createdAt: comment.date,
+        }))
         : [];
     } catch {
       return [];
@@ -303,13 +303,18 @@ function ProductDetailsContent() {
           {/* PRODUCT ACTIONS */}
 
           <div className="details-actions">
-            <button className="primary-btn" onClick={handleAddToCart} disabled={!isAvailable}>
+            <button
+              type="button"
+              className="primary-btn add-to-cart-btn"
+              onClick={handleAddToCart}
+              disabled={!isAvailable}
+            >
               <ShoppingBag size={18} />
-
-              {isAvailable ? "Add to Cart" : "Out of Stock"}
+              <span>{isAvailable ? "Add to Cart" : "Out of Stock"}</span>
             </button>
 
             <button
+              type="button"
               className={`details-wishlist ${isWishlisted ? "active" : ""}`}
               onClick={() => toggleWishlist(product)}
               aria-label="Toggle wishlist"
@@ -569,13 +574,12 @@ function ProductDetailsContent() {
 
           {message && (
             <p
-              className={`review-feedback ${
-                message.includes("successfully") ||
-                message.includes("Thank you") ||
-                message.includes("deleted")
+              className={`review-feedback ${message.includes("successfully") ||
+                  message.includes("Thank you") ||
+                  message.includes("deleted")
                   ? "success"
                   : "error"
-              }`}
+                }`}
               role="status"
             >
               {message}
