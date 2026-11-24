@@ -30,7 +30,7 @@
 
 /* FOOTER LINKS */
 
-.footer-links>a {
+.footer-links > a {
   display: block;
   color: var(--muted);
   margin: 12px 0;
@@ -54,7 +54,9 @@
 .social-links a {
   color: var(--muted);
   font-size: 18px;
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .social-links a:hover {
@@ -76,7 +78,7 @@
   margin-bottom: 10px;
 }
 
-.footer-newsletter>p {
+.footer-newsletter > p {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
@@ -95,7 +97,9 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 7px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .footer-newsletter .newsletter-input-group:focus-within {
@@ -146,7 +150,9 @@
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
 }
 
 .footer-newsletter .newsletter-input-group button:hover {

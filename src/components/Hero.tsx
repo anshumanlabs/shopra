@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,7 +7,6 @@ import { getProductImage } from "../utils/images";
 function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-
 
   const slides = [
     {
@@ -42,9 +40,7 @@ function Hero() {
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? slides.length - 1 : prev - 1
-    );
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   };
 
   useEffect(() => {
@@ -71,9 +67,7 @@ function Hero() {
           <span>BEST.</span>
         </h1>
 
-        <p>
-          Discover products you'll love. Experience a new way of shopping.
-        </p>
+        <p>Discover products you'll love. Experience a new way of shopping.</p>
 
         <div className="hero-buttons">
           <Link to="/shop" className="primary-btn">
@@ -111,15 +105,8 @@ function Hero() {
         onMouseLeave={() => setIsPaused(false)}
       >
         {slides.map((slide, index) => (
-          <div
-            className={`hero-slide ${currentSlide === index ? "active" : ""
-              }`}
-            key={slide.image}
-          >
-            <img
-              src={getProductImage(slide.image)}
-              alt={slide.alt}
-            />
+          <div className={`hero-slide ${currentSlide === index ? "active" : ""}`} key={slide.image}>
+            <img src={getProductImage(slide.image)} alt={slide.alt} />
 
             <div className="image-label">
               <span>{slide.tag}</span>
@@ -129,20 +116,12 @@ function Hero() {
         ))}
 
         {/* Previous Button */}
-        <button
-          className="carousel-arrow prev"
-          onClick={prevSlide}
-          aria-label="Previous slide"
-        >
+        <button className="carousel-arrow prev" onClick={prevSlide} aria-label="Previous slide">
           <ChevronLeft size={22} />
         </button>
 
         {/* Next Button */}
-        <button
-          className="carousel-arrow next"
-          onClick={nextSlide}
-          aria-label="Next slide"
-        >
+        <button className="carousel-arrow next" onClick={nextSlide} aria-label="Next slide">
           <ChevronRight size={22} />
         </button>
 
@@ -151,8 +130,7 @@ function Hero() {
           {slides.map((_, index) => (
             <button
               key={index}
-              className={`carousel-dot ${currentSlide === index ? "active" : ""
-                }`}
+              className={`carousel-dot ${currentSlide === index ? "active" : ""}`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={currentSlide === index ? "true" : undefined}

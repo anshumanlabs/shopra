@@ -1,4 +1,3 @@
-
 /* =====================================
    HERO SECTION
 ===================================== */
@@ -304,7 +303,6 @@
 ===================================== */
 
 @media (max-width: 992px) {
-
   .hero {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
@@ -335,7 +333,6 @@
 ===================================== */
 
 @media (max-width: 650px) {
-
   .hero {
     grid-template-columns: 1fr;
     gap: 35px;
@@ -437,7 +434,6 @@
 ===================================== */
 
 @media (max-width: 380px) {
-
   .hero {
     padding: 35px 4%;
     gap: 30px;
@@ -474,7 +470,6 @@
 ===================================== */
 
 @media (prefers-reduced-motion: reduce) {
-
   .hero-slide,
   .hero-slide img,
   .carousel-arrow,
@@ -483,5 +478,4 @@
   .secondary-btn {
     transition: none;
   }
-
 }

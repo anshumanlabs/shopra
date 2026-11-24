@@ -39,10 +39,6 @@ function Login() {
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <Link to="/" className="auth-logo">
-          SHOP<span>ORA.</span>
-        </Link>
-
         <div className="auth-heading">
           <span className="auth-tag">WELCOME BACK</span>
           <h1>

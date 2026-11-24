@@ -48,11 +48,11 @@ function ProductDetailsContent() {
 
       return product
         ? product.comments.map((comment) => ({
-          ...comment,
-          productId: product.id,
-          userId: `demo-${comment.id}`,
-          createdAt: comment.date,
-        }))
+            ...comment,
+            productId: product.id,
+            userId: `demo-${comment.id}`,
+            createdAt: comment.date,
+          }))
         : [];
     } catch {
       return [];
@@ -383,9 +383,7 @@ function ProductDetailsContent() {
               <h2>Seller Information</h2>
             </div>
 
-            {product.seller.verified && (
-              <span className="verified-seller">✓ Verified Seller</span>
-            )}
+            {product.seller.verified && <span className="verified-seller">✓ Verified Seller</span>}
           </div>
 
           <div className="seller-information-grid">
@@ -419,9 +417,7 @@ function ProductDetailsContent() {
 
             <div>
               <span>Total Seller Reviews</span>
-              <strong>
-                {product.seller.totalReviews.toLocaleString("en-IN")}
-              </strong>
+              <strong>{product.seller.totalReviews.toLocaleString("en-IN")}</strong>
             </div>
 
             <div>
@@ -437,18 +433,14 @@ function ProductDetailsContent() {
             <div>
               <span>Support Email</span>
               <strong>
-                <a href={`mailto:${product.seller.supportEmail}`}>
-                  {product.seller.supportEmail}
-                </a>
+                <a href={`mailto:${product.seller.supportEmail}`}>{product.seller.supportEmail}</a>
               </strong>
             </div>
 
             <div>
               <span>Support Phone</span>
               <strong>
-                <a href={`tel:${product.seller.supportPhone}`}>
-                  {product.seller.supportPhone}
-                </a>
+                <a href={`tel:${product.seller.supportPhone}`}>{product.seller.supportPhone}</a>
               </strong>
             </div>
           </div>
@@ -577,12 +569,13 @@ function ProductDetailsContent() {
 
           {message && (
             <p
-              className={`review-feedback ${message.includes("successfully") ||
-                  message.includes("Thank you") ||
-                  message.includes("deleted")
+              className={`review-feedback ${
+                message.includes("successfully") ||
+                message.includes("Thank you") ||
+                message.includes("deleted")
                   ? "success"
                   : "error"
-                }`}
+              }`}
               role="status"
             >
               {message}

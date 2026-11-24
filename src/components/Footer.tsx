@@ -1,4 +1,4 @@
-import { ArrowUp} from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { FaInstagram, FaFacebookF, FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import "./Footer.css";
@@ -61,12 +61,9 @@ function Footer() {
               aria-label="Email address"
               required
             />
-            <button type="submit">
-              Subscribe
-            </button>
+            <button type="submit">Subscribe</button>
           </form>
         </div>
-
       </div>
       <div className="footer-bottom">
         <span>© 2026 SHOPORA. All rights reserved.</span>
