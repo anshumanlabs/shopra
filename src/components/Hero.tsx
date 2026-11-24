@@ -10,6 +10,18 @@ function Hero() {
 
   const slides = [
     {
+      image: "photo-1507473885765-e6ed057f782c",
+      tag: "HOME & LIVING",
+      title: "Make Life Beautiful.",
+      alt: "Modern table lamp",
+    },
+    {
+      image: "photo-1516035069371-29a1b244cc32",
+      tag: "LATEST TECHNOLOGY",
+      title: "Explore What's Next.",
+      alt: "Premium digital camera",
+    },
+    {
       image: "photo-1556821840-3a63f95609a7",
       tag: "NEW FASHION COLLECTION",
       title: "Upgrade Your Style.",
@@ -20,18 +32,6 @@ function Hero() {
       tag: "STEP INTO COMFORT",
       title: "Move With Confidence.",
       alt: "Classic sports sneakers",
-    },
-    {
-      image: "photo-1516035069371-29a1b244cc32",
-      tag: "LATEST TECHNOLOGY",
-      title: "Explore What's Next.",
-      alt: "Premium digital camera",
-    },
-    {
-      image: "photo-1507473885765-e6ed057f782c",
-      tag: "HOME & LIVING",
-      title: "Make Life Beautiful.",
-      alt: "Modern table lamp",
     },
   ];
 

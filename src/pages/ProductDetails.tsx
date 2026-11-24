@@ -48,11 +48,11 @@ function ProductDetailsContent() {
 
       return product
         ? product.comments.map((comment) => ({
-          ...comment,
-          productId: product.id,
-          userId: `demo-${comment.id}`,
-          createdAt: comment.date,
-        }))
+            ...comment,
+            productId: product.id,
+            userId: `demo-${comment.id}`,
+            createdAt: comment.date,
+          }))
         : [];
     } catch {
       return [];
@@ -574,12 +574,13 @@ function ProductDetailsContent() {
 
           {message && (
             <p
-              className={`review-feedback ${message.includes("successfully") ||
-                  message.includes("Thank you") ||
-                  message.includes("deleted")
+              className={`review-feedback ${
+                message.includes("successfully") ||
+                message.includes("Thank you") ||
+                message.includes("deleted")
                   ? "success"
                   : "error"
-                }`}
+              }`}
               role="status"
             >
               {message}
