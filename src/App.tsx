@@ -36,7 +36,6 @@ function App() {
       <ShopProvider>
         <BrowserRouter>
           <Navbar />
-
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -68,7 +67,6 @@ function App() {
               />
             </Routes>
           </Suspense>
-
           <Footer />
         </BrowserRouter>
       </ShopProvider>
