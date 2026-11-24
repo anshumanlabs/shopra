@@ -409,3 +409,54 @@
     gap: 6px;
   }
 }
+
+/* =========================================
+   MOBILE SEARCH INPUT FIX
+========================================= */
+
+.shop-search {
+  min-height: 48px;
+  height: 48px;
+  overflow: hidden;
+}
+
+.shop-search input {
+  display: block;
+  height: 46px;
+  min-height: 46px;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: normal;
+  font-size: 14px;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.shop-search input:focus {
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.shop-search input::placeholder {
+  color: #888;
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .shop-search {
+    width: 100%;
+    height: 50px;
+    min-height: 50px;
+    padding: 0 14px;
+  }
+
+  .shop-search input {
+    height: 48px;
+    min-height: 48px;
+    font-size: 14px;
+  }
+}

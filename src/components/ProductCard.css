@@ -170,12 +170,12 @@
 
 @media (max-width: 700px) {
   .product-image {
-    height: 210px;
+    height: 250px;
   }
 }
 
 @media (max-width: 380px) {
   .product-image {
-    height: 170px;
+    height: 250px;
   }
 }
