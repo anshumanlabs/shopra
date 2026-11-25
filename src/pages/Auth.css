@@ -34,7 +34,7 @@
 }
 
 .auth-heading {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 
 .auth-tag {
@@ -249,4 +249,17 @@
   .auth-heading h1 {
     font-size: 29px;
   }
+}
+
+.auth-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.auth-brand img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
 }

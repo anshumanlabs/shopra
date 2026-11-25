@@ -56,8 +56,8 @@ function Signup() {
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <Link to="/" className="auth-logo">
-          SHOP<span>ORA.</span>
+        <Link to="/" className="auth-brand">
+          <img src="/shopra.svg" alt="Shopora" />
         </Link>
 
         <div className="auth-heading">

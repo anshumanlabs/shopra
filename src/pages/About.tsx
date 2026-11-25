@@ -84,8 +84,6 @@ function About() {
             </div>
           </div>
         </div>
-
-        <span className="about-hero-index">01 — OUR STORY</span>
       </section>
 
       <section className="about-story" id="our-story">

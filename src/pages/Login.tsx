@@ -40,11 +40,12 @@ function Login() {
     <main className="auth-page">
       <div className="auth-card">
         <div className="auth-heading">
-          <span className="auth-tag">WELCOME BACK</span>
+          <Link to="/" className="auth-brand">
+            <img src="/shopra.svg" alt="Shopora" />
+          </Link>
           <h1>
             Sign in to your <span>account.</span>
           </h1>
-          <p>Enter your details to continue shopping with SHOPORA.</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>

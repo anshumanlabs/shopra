@@ -22,7 +22,7 @@ function Cart() {
         <p>Looks like you haven't added anything yet.</p>
 
         <Link to="/shop" className="primary-btn">
-          Start Shopping <ArrowRight size={18} />
+          Start Shopping <ArrowRight size={18} color="#fff" />
         </Link>
       </main>
     );
