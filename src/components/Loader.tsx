@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Sparkles, ShoppingBag } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import "./Loader.css";
 
 const loadingMessages = [
@@ -31,7 +31,7 @@ function Loader() {
         <div className="loader-orbit orbit-two" />
 
         <div className="loader-orb">
-          <ShoppingBag className="loader-icon" size={30} />
+          <img src="/shopra.svg" alt="SHOPORA Logo" />
         </div>
 
         <span className="loader-particle particle-one" />

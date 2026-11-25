@@ -49,7 +49,6 @@ function Cart() {
               </Link>
 
               <div className="cart-item-info">
-                <span>{item.category}</span>
                 <h3>
                   <Link to={`/products/${item.id}`}>{item.name}</Link>
                 </h3>

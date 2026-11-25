@@ -237,8 +237,6 @@ function ProductDetailsContent() {
       <div className="product-details-grid">
         <div className="product-details-image">
           <img src={getProductImage(product.image)} alt={product.name} />
-
-          <span className="discount-badge">SPECIAL OFFER</span>
         </div>
 
         <section className="product-details-content">

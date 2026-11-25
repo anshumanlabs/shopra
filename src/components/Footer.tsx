@@ -3,6 +3,7 @@ import { FaInstagram, FaFacebookF, FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 import { useState } from "react";
+import React from "react";
 
 function Footer() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ function Footer() {
       <div className="footer-content">
         <div className="footer-brand">
           <Link to="/" className="logo">
-            SHOP<span>ORA.</span>
+            <img src="/shopra.svg" alt="SHOPORA Logo" />
           </Link>
 
           <p>Your World. Your Shopping. Discover a better shopping experience.</p>
@@ -38,8 +39,8 @@ function Footer() {
           <h4>Quick Links</h4>
           <Link to="/">Home</Link>
           <Link to="/shop">Shop</Link>
-          <Link to="/about">About Us</Link>
-          <Link to="/contact">Contact Us</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
         </div>
 
         <div className="footer-newsletter">
@@ -85,4 +86,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default React.memo(Footer);

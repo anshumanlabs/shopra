@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./Contact.css";
+import React from "react";
 
 const faqs = [
   {
@@ -144,9 +145,7 @@ function Contact() {
               <div className="contact-success-icon">
                 <Mail size={35} />
               </div>
-
               <h2>Thank you!</h2>
-
               <p>
                 Your form passed validation. Message delivery will be available once the support API
                 is connected.
@@ -170,9 +169,7 @@ function Contact() {
           ) : (
             <>
               <span className="about-eyebrow">DROP US A MESSAGE</span>
-
               <h2>We'd love to hear from you.</h2>
-
               <p className="contact-form-intro">
                 Fill in the details below. We'll take it from here.
               </p>
@@ -233,11 +230,9 @@ function Contact() {
                   />
                   <span className="contact-character-count">{form.message.length}/1000</span>
                 </div>
-
                 <button type="submit" className="contact-submit-btn">
                   Send Message <ArrowRight size={18} />
                 </button>
-
                 <p className="contact-form-disclaimer">
                   Your information is used only for handling this enquiry. Connect the form to a
                   secure backend before collecting real customer messages.
@@ -264,9 +259,7 @@ function Contact() {
             <details key={faq.question} className="contact-faq-item">
               <summary>
                 <span className="contact-faq-number">0{index + 1}</span>
-
                 {faq.question}
-
                 <span className="contact-faq-plus">+</span>
               </summary>
 
@@ -279,4 +272,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default React.memo(Contact);

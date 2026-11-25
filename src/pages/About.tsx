@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, Heart, Sparkles, Target, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./About.css";
+import React from "react";
 
 const values = [
   {
@@ -174,4 +175,4 @@ function About() {
   );
 }
 
-export default About;
+export default React.memo(About);
