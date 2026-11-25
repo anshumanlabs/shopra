@@ -1,16 +1,23 @@
+/* =========================================
+   FOOTER
+========================================= */
+
 .footer {
   padding: 60px 6% 20px;
   border-top: 1px solid var(--border);
   background: var(--background, #050505);
+  overflow: hidden;
 }
 
 .footer-content {
+  width: 100%;
   max-width: 1300px;
   margin: auto;
   display: grid;
   grid-template-columns: 1.3fr 0.7fr 1.7fr;
   gap: 45px;
   align-items: start;
+  box-sizing: border-box;
 }
 
 .footer-content p {
@@ -28,9 +35,45 @@
   color: var(--text);
 }
 
-/* FOOTER LINKS */
+/* =========================================
+   BRAND
+========================================= */
 
-.footer-links > a {
+.footer-brand {
+  min-width: 0;
+  width: 100%;
+}
+
+.footer-brand .logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.footer-brand .logo img {
+  width: 145px;
+  height: 45px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.footer-brand .logo:hover img {
+  transform: scale(1.04);
+  opacity: 0.9;
+}
+
+/* =========================================
+   FOOTER LINKS
+========================================= */
+
+.footer-links {
+  min-width: 0;
+}
+
+.footer-links>a {
   display: block;
   color: var(--muted);
   margin: 12px 0;
@@ -43,7 +86,9 @@
   color: var(--purple);
 }
 
-/* SOCIAL LINKS */
+/* =========================================
+   SOCIAL LINKS
+========================================= */
 
 .social-links {
   display: flex;
@@ -54,9 +99,7 @@
 .social-links a {
   color: var(--muted);
   font-size: 18px;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
+  transition: color 0.25s ease, transform 0.25s ease;
 }
 
 .social-links a:hover {
@@ -78,7 +121,7 @@
   margin-bottom: 10px;
 }
 
-.footer-newsletter > p {
+.footer-newsletter>p {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
@@ -97,17 +140,13 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 7px;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .footer-newsletter .newsletter-input-group:focus-within {
   border-color: var(--purple);
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
 }
-
-/* EMAIL INPUT */
 
 .footer-newsletter .newsletter-input-group input {
   display: block;
@@ -131,16 +170,13 @@
   opacity: 0.8;
 }
 
-/* SUBSCRIBE BUTTON */
-
 .footer-newsletter .newsletter-input-group button {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   min-height: 40px;
-  padding: 0 8px;
+  padding: 0 12px;
   border: none;
   border-radius: 5px;
   background: var(--purple);
@@ -150,9 +186,7 @@
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    filter 0.2s ease,
-    transform 0.2s ease;
+  transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 .footer-newsletter .newsletter-input-group button:hover {
@@ -184,6 +218,7 @@
 ========================================= */
 
 .footer-bottom {
+  width: 100%;
   max-width: 1300px;
   margin: 45px auto 0;
   border-top: 1px solid var(--border);
@@ -194,6 +229,7 @@
   color: var(--muted);
   font-size: 12px;
   padding-top: 22px;
+  box-sizing: border-box;
 }
 
 .back-top {
@@ -210,15 +246,13 @@
 }
 
 /* =========================================
-   RESPONSIVE
+   TABLET
 ========================================= */
 
-/* TABLET */
-
-@media (max-width: 900px) {
+@media (max-width: 900px) and (min-width: 601px) {
   .footer-content {
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 35px;
   }
 
   .footer-newsletter {
@@ -227,33 +261,44 @@
   }
 }
 
-/* MOBILE */
 
-@media (max-width: 600px) {
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
   .footer {
-    padding: 45px 5% 20px;
+    padding-left: 14px;
+    padding-right: 14px;
   }
 
   .footer-content {
-    grid-template-columns: 1fr;
-    gap: 35px;
+    column-gap: 12px;
   }
 
-  .footer-newsletter {
-    grid-column: auto;
-    max-width: 100%;
+  .footer-brand .logo img {
+    width: 85px;
+    height: 34px;
   }
 
-  .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 35px;
+  .footer-brand>p {
+    font-size: 10px;
+    line-height: 1.6;
   }
-}
 
-/* SMALL MOBILE */
+  .footer-links {
+    padding-left: 3px;
+  }
 
-@media (max-width: 380px) {
+  .footer-content h4 {
+    font-size: 13px;
+  }
+
+  .footer-links>a {
+    font-size: 12px;
+  }
+
   .footer-newsletter .newsletter-input-group {
     gap: 3px;
     padding: 4px;
@@ -265,48 +310,96 @@
   }
 
   .footer-newsletter .newsletter-input-group button {
-    padding: 0 10px;
+    padding: 0 9px;
     font-size: 11px;
-    gap: 4px;
+  }
+
+  .footer-bottom {
+    font-size: 9px;
   }
 }
 
-.logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  flex-shrink: 0;
-}
 
-.logo img {
-  width: 145px;
-  height: 45px;
-  object-fit: contain;
-  display: block;
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
-}
-
-/* Hover effect */
-.logo:hover img {
-  transform: scale(1.04);
-  opacity: 0.9;
-}
-
-/* Tablet */
-@media (max-width: 768px) {
-  .logo img {
-    width: 125px;
-    height: 40px;
+@media screen and (max-width: 600px) {
+  .footer .footer-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px 0;
   }
-}
 
-/* Mobile */
-@media (max-width: 480px) {
-  .logo img {
-    width: 110px;
+  /* BRAND: LEFT SIDE */
+  .footer .footer-brand {
+    display: block;
+    flex: 0 0 58%;
+    width: 58%;
+    max-width: 58%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-right: 20px;
+  }
+
+  .footer .footer-brand .logo img {
+    width: 95px;
     height: 36px;
+  }
+
+  /* FORCE MOTTO TO WRAP */
+  .footer .footer-brand>p {
+    display: block;
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    margin: 10px 0 0;
+    padding: 0;
+
+    font-size: 11px;
+    line-height: 1.7;
+
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    box-sizing: border-box;
+  }
+
+  .footer .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 15px;
+  }
+
+  /* QUICK LINKS: RIGHT SIDE */
+  .footer .footer-links {
+    display: block;
+    flex: 0 0 42%;
+    width: 42%;
+    max-width: 42%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: 5px;
+  }
+
+  /* NEWSLETTER: FULL WIDTH BELOW */
+  .footer .footer-newsletter {
+    display: block;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .footer .footer-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 }
