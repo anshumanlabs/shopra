@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import type { ShippingAddress } from "../types/orders";
 import { validateCard } from "../utils/cardValidator";
 import { orderService } from "../services/orderService";
+import { paymentService } from "../services/paymentService";
 import { getProductImage } from "../utils/images";
 
 type SavedAddress = ShippingAddress & {
@@ -213,6 +214,33 @@ function Checkout() {
     setLoading(true);
 
     try {
+      const payment = await paymentService.createPayment({
+        orderId: crypto.randomUUID(),
+        amount: total,
+        currency: "INR",
+        paymentMethodToken: `tok_${cardNumber.replace(/\D/g, "").slice(-4)}`,
+        provider: "MOCK_GATEWAY",
+      });
+
+      if (payment.status !== "SUCCESS") {
+        const maxAttempts = 10;
+        const intervalMs = 1000;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          await new Promise((resolve) => setTimeout(resolve, intervalMs));
+
+          const updatedPayment = await paymentService.getPayment(payment.paymentId);
+
+          if (updatedPayment?.status === "SUCCESS") {
+            break;
+          }
+
+          if (attempt === maxAttempts - 1) {
+            throw new Error("Payment did not complete in time. Please try again.");
+          }
+        }
+      }
+
       const createdOrder = await orderService.create({
         userId: user.id,
         items: cart.map((item) => ({
@@ -459,7 +487,7 @@ function Checkout() {
             className="checkout-submit"
             disabled={loading || (!useNewAddress && !selectedAddressId)}
           >
-            {loading ? "Processing..." : `Pay ₹${total.toLocaleString("en-IN")}`}
+            {loading ? "Processing payment..." : `Pay ₹${total.toLocaleString("en-IN")}`}
           </button>
         </div>
 

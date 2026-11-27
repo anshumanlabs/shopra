@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -13,9 +13,11 @@ import {
   Trash2,
 } from "lucide-react";
 
-import products from "../data/products";
+import { productService } from "../services/productService";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
+import WishlistSnackbar from "../components/WishlistSnackbar";
+import type { Product, ProductComment } from "../types";
 import "./ProductDetails.css";
 import { getProductImage } from "../utils/images";
 
@@ -37,37 +39,67 @@ function ProductDetailsContent() {
   const { addToCart, toggleWishlist, wishlist } = useShop();
   const { user, isAuthenticated } = useAuth();
 
-  const product = products.find((item) => item.id === Number(productId));
-
-  const [quantity, setQuantity] = useState(1);
-  const [reviews, setReviews] = useState<ProductReview[]>(() => {
-    try {
-      const saved = localStorage.getItem(`shopora_reviews_${productId}`);
-
-      if (saved) return JSON.parse(saved);
-
-      return product
-        ? product.comments.map((comment) => ({
-            ...comment,
-            productId: product.id,
-            userId: `demo-${comment.id}`,
-            createdAt: comment.date,
-          }))
-        : [];
-    } catch {
-      return [];
-    }
-  });
-
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [reviews, setReviews] = useState<ProductReview[]>([]);
   const [selectedRating, setSelectedRating] = useState(0);
   const [comment, setComment] = useState("");
   const [sortBy, setSortBy] = useState<ReviewSort>("recent");
   const [message, setMessage] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [showWishlistSnackbar, setShowWishlistSnackbar] = useState(false);
 
-  if (!product) {
+  useEffect(() => {
+    if (!productId) {
+      setTimeout(() => setLoading(false), 0);
+      return;
+    }
+
+    productService
+      .getById(Number(productId))
+      .then((data: unknown) => {
+        const productData = data as Product | null;
+        setProduct(productData);
+        try {
+          const saved = localStorage.getItem(`shopora_reviews_${productId}`);
+          if (saved) {
+            setReviews(JSON.parse(saved));
+          } else if (productData?.comments) {
+            setReviews(
+              productData.comments.map((comment: ProductComment) => ({
+                ...comment,
+                id: String(comment.id),
+                productId: productData.id,
+                userId: `demo-${comment.id}`,
+                createdAt: comment.date,
+              }))
+            );
+          }
+        } catch {
+          setReviews([]);
+        }
+
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Product not found.");
+        setLoading(false);
+      });
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <main className="product-details-page">
+        <h1>Loading product...</h1>
+      </main>
+    );
+  }
+
+  if (error || !product) {
     return (
       <main className="product-not-found">
-        <h1>Product not found</h1>
+        <h1>{error || "Product not found"}</h1>
 
         <p>The product you're looking for does not exist.</p>
 
@@ -257,10 +289,13 @@ function ProductDetailsContent() {
           <div className="details-price">
             <strong>₹{product.price.toLocaleString("en-IN")}</strong>
 
-            <del>₹{product.oldPrice.toLocaleString("en-IN")}</del>
+            <del>₹{product.oldPrice?.toLocaleString("en-IN") ?? "-"}</del>
 
             <span>
-              {Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}% OFF
+              {product.oldPrice
+                ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) +
+                  "% OFF"
+                : ""}
             </span>
           </div>
 
@@ -314,7 +349,13 @@ function ProductDetailsContent() {
             <button
               type="button"
               className={`details-wishlist ${isWishlisted ? "active" : ""}`}
-              onClick={() => toggleWishlist(product)}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setShowWishlistSnackbar(true);
+                  return;
+                }
+                toggleWishlist(product);
+              }}
               aria-label="Toggle wishlist"
               aria-pressed={isWishlisted}
             >
@@ -363,7 +404,7 @@ function ProductDetailsContent() {
 
             <div>
               <span>Original Price</span>
-              <strong>₹{product.oldPrice.toLocaleString("en-IN")}</strong>
+              <strong>₹{product.oldPrice?.toLocaleString("en-IN") ?? "-"}</strong>
             </div>
 
             <div>
@@ -386,64 +427,66 @@ function ProductDetailsContent() {
               <h2>Seller Information</h2>
             </div>
 
-            {product.seller.verified && <span className="verified-seller">✓ Verified Seller</span>}
+            {product.seller?.verified && <span className="verified-seller">✓ Verified Seller</span>}
           </div>
 
           <div className="seller-information-grid">
             <div>
               <span>Seller Name</span>
-              <strong>{product.seller.name}</strong>
+              <strong>{product.seller?.name}</strong>
             </div>
 
             <div>
               <span>Business Name</span>
-              <strong>{product.seller.businessName}</strong>
+              <strong>{product.seller?.businessName}</strong>
             </div>
 
             <div>
               <span>Seller ID</span>
-              <strong>{product.seller.id}</strong>
+              <strong>{product.seller?.id}</strong>
             </div>
 
             <div>
               <span>GSTIN</span>
-              <strong>{product.seller.gstin}</strong>
+              <strong>{product.seller?.gstin}</strong>
             </div>
 
             <div>
               <span>Seller Rating</span>
               <strong>
                 <Star size={15} fill="#f5c542" color="#f5c542" />
-                {product.seller.rating.toFixed(1)} / 5
+                {product.seller?.rating?.toFixed(1)} / 5
               </strong>
             </div>
 
             <div>
               <span>Total Seller Reviews</span>
-              <strong>{product.seller.totalReviews.toLocaleString("en-IN")}</strong>
+              <strong>{product.seller?.totalReviews?.toLocaleString("en-IN")}</strong>
             </div>
 
             <div>
               <span>Location</span>
-              <strong>{product.seller.location}</strong>
+              <strong>{product.seller?.location}</strong>
             </div>
 
             <div>
               <span>Dispatch Time</span>
-              <strong>{product.seller.dispatchTime}</strong>
+              <strong>{product.seller?.dispatchTime}</strong>
             </div>
 
             <div>
               <span>Support Email</span>
               <strong>
-                <a href={`mailto:${product.seller.supportEmail}`}>{product.seller.supportEmail}</a>
+                <a href={`mailto:${product.seller?.supportEmail}`}>
+                  {product.seller?.supportEmail}
+                </a>
               </strong>
             </div>
 
             <div>
               <span>Support Phone</span>
               <strong>
-                <a href={`tel:${product.seller.supportPhone}`}>{product.seller.supportPhone}</a>
+                <a href={`tel:${product.seller?.supportPhone}`}>{product.seller?.supportPhone}</a>
               </strong>
             </div>
           </div>
@@ -654,6 +697,11 @@ function ProductDetailsContent() {
           )}
         </div>
       </section>
+      <WishlistSnackbar
+        isOpen={showWishlistSnackbar}
+        onClose={() => setShowWishlistSnackbar(false)}
+        productName={product.name}
+      />
     </main>
   );
 }

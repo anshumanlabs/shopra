@@ -160,7 +160,6 @@ function Profile() {
         <h1>
           Welcome, <span>{user.name}</span>
         </h1>
-        <p>Manage your SHOPRA account and shopping activity.</p>
       </div>
 
       <div className="profile-grid">
@@ -170,7 +169,6 @@ function Profile() {
             <UserRound size={35} />
           </div>
 
-          <h2>{user.name}</h2>
           <span className="profile-role">{user.role}</span>
 
           <div className="profile-detail">

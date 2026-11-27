@@ -1,16 +1,69 @@
+import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 import CategoryCard from "../components/CategoryCard";
-import products from "../data/products";
+import { productService } from "../services/productService";
+import type { Product } from "../types";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
 function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    productService
+      .getAll()
+      .then((data) => {
+        const content = Array.isArray(data)
+          ? data
+          : (data as { content?: Product[] }).content || [];
+        setProducts(content as Product[]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Unable to load products.");
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="home-loading">
+        <Hero />
+        <section className="products-section">
+          <div className="section-heading">
+            <div>
+              <span className="section-tag">HANDPICKED FOR YOU</span>
+              <h2>
+                Trending Products<span>.</span>
+              </h2>
+              <p>Discover our most loved products.</p>
+            </div>
+            <Link to="/shop" className="view-all">
+              View All <ArrowRight size={18} />
+            </Link>
+          </div>
+          <div className="products-grid">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="product-skeleton" />
+            ))}
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main>
       <Hero />
-      {/* Trending products */}
+      {error && (
+        <div className="home-error" role="alert">
+          {error}
+        </div>
+      )}
 
       <section className="products-section" id="shop">
         <div className="section-heading">
@@ -41,7 +94,6 @@ function Home() {
       <section className="categories-section" id="categories">
         <div className="section-heading">
           <div>
-            <span className="section-tag">EXPLORE SHOPORA</span>
             <h2>
               Shop by Category<span>.</span>
             </h2>

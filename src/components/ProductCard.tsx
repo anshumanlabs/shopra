@@ -1,9 +1,12 @@
 import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useShop } from "../context/ShopContext";
+import { useAuth } from "../context/AuthContext";
 import type { Product } from "../types";
 import "./ProductCard.css";
 import { getProductImage } from "../utils/images";
+import WishlistSnackbar from "./WishlistSnackbar";
 
 interface ProductCardProps {
   product: Product;
@@ -11,8 +14,18 @@ interface ProductCardProps {
 
 function ProductCard({ product }: ProductCardProps) {
   const { addToCart, toggleWishlist, wishlist } = useShop();
+  const { isAuthenticated } = useAuth();
 
   const isWishlisted = wishlist.some((item) => item.id === product.id);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+
+  const handleToggleWishlist = () => {
+    if (!isAuthenticated) {
+      setShowSnackbar(true);
+      return;
+    }
+    toggleWishlist(product);
+  };
 
   return (
     <div className="product-card">
@@ -23,7 +36,7 @@ function ProductCard({ product }: ProductCardProps) {
 
         <button
           className={`wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
-          onClick={() => toggleWishlist(product)}
+          onClick={handleToggleWishlist}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           aria-pressed={isWishlisted}
         >
@@ -61,6 +74,12 @@ function ProductCard({ product }: ProductCardProps) {
           <Eye size={15} /> View Details
         </Link>
       </div>
+
+      <WishlistSnackbar
+        isOpen={showSnackbar}
+        onClose={() => setShowSnackbar(false)}
+        productName={product.name}
+      />
     </div>
   );
 }

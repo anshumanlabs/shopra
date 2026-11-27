@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Search, ShoppingBag, Heart, Menu, X, UserRound } from "lucide-react";
 
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 function Navbar() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { isAuthenticated } = useAuth();
@@ -77,7 +78,7 @@ function Navbar() {
             e.preventDefault();
             const form = e.currentTarget;
             const query = new FormData(form).get("search");
-            window.location.href = `/shop?search=${encodeURIComponent(String(query))}`;
+            navigate(`/shop?search=${encodeURIComponent(String(query))}`);
           }}
         >
           <input name="search" placeholder="Search products..." autoFocus />
