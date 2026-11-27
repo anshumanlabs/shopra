@@ -94,7 +94,6 @@ function Home() {
       <section className="categories-section" id="categories">
         <div className="section-heading">
           <div>
-            <span className="section-tag">EXPLORE SHOPORA</span>
             <h2>
               Shop by Category<span>.</span>
             </h2>
