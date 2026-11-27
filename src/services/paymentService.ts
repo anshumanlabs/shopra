@@ -17,7 +17,9 @@ function simulateAsyncCompletion(paymentId: string): void {
   setTimeout(() => {
     const payments = getLocalPayments();
     const updated = payments.map((p) =>
-      p.id === paymentId ? { ...p, status: "SUCCESS" as PaymentStatus, updatedAt: new Date().toISOString() } : p
+      p.id === paymentId
+        ? { ...p, status: "SUCCESS" as PaymentStatus, updatedAt: new Date().toISOString() }
+        : p
     );
     saveLocalPayments(updated);
   }, 3000);

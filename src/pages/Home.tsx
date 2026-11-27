@@ -17,7 +17,10 @@ function Home() {
     productService
       .getAll()
       .then((data) => {
-        setProducts(data as Product[]);
+        const content = Array.isArray(data)
+          ? data
+          : (data as { content?: Product[] }).content || [];
+        setProducts(content as Product[]);
         setLoading(false);
       })
       .catch((err) => {
@@ -34,7 +37,9 @@ function Home() {
           <div className="section-heading">
             <div>
               <span className="section-tag">HANDPICKED FOR YOU</span>
-              <h2>Trending Products<span>.</span></h2>
+              <h2>
+                Trending Products<span>.</span>
+              </h2>
               <p>Discover our most loved products.</p>
             </div>
             <Link to="/shop" className="view-all">
@@ -55,7 +60,9 @@ function Home() {
     <main>
       <Hero />
       {error && (
-        <div className="home-error" role="alert">{error}</div>
+        <div className="home-error" role="alert">
+          {error}
+        </div>
       )}
 
       <section className="products-section" id="shop">

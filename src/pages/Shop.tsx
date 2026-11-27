@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
@@ -10,19 +10,34 @@ import "./Shop.css";
 
 const PAGE_SIZE = 6;
 
+interface PageResponse {
+  content: Product[];
+  totalPages: number;
+  totalElements: number;
+}
+
+const SORT_MAP: Record<string, { sortBy: string; order: string }> = {
+  default: { sortBy: "id", order: "asc" },
+  low: { sortBy: "price", order: "asc" },
+  high: { sortBy: "price", order: "desc" },
+  rating: { sortBy: "rating", order: "desc" },
+  name: { sortBy: "name", order: "asc" },
+};
+
 function Shop() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [category, setCategory] = useState(searchParams.get("category") || "All");
+  const category = searchParams.get("category") || "All";
+  const search = searchParams.get("search") || "";
+  const sort = searchParams.get("sort") || "default";
+  const minPrice = searchParams.get("minPrice") || "";
+  const maxPrice = searchParams.get("maxPrice") || "";
+  const minRating = Number(searchParams.get("minRating") || 0);
+  const page = Number(searchParams.get("page") || 1);
 
-  const [search, setSearch] = useState(searchParams.get("search") || "");
-
-  const [sort, setSort] = useState("default");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [page, setPage] = useState(1);
-
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -30,72 +45,72 @@ function Shop() {
 
   const categories = ["All", "Fashion", "Electronics", "Accessories", "Footwear"];
 
+  const { sortBy, order } = SORT_MAP[sort] || SORT_MAP.default;
+
+  const updateParams = (updates: Record<string, string | null>) => {
+    const next = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "") {
+        next.delete(key);
+      } else {
+        next.set(key, value);
+      }
+    });
+    if (next.get("category") === "All") next.delete("category");
+    if (next.get("sort") === "default") next.delete("sort");
+    if (next.get("minRating") === "0") next.delete("minRating");
+    if (next.get("page") === "1") next.delete("page");
+    setSearchParams(next);
+  };
+
   useEffect(() => {
-    productService
-      .getAll()
-      .then((data) => {
-        setAllProducts(data as Product[]);
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const data = (await productService.getAll({
+          page: page - 1,
+          size: PAGE_SIZE,
+          category,
+          sortBy,
+          order,
+          minRating,
+          minPrice: minPrice === "" ? undefined : Number(minPrice),
+          maxPrice: maxPrice === "" ? undefined : Number(maxPrice),
+        })) as unknown;
+
+        const isArray = Array.isArray(data);
+        let content: Product[];
+        let totalElementsVal: number;
+        let totalPagesVal: number;
+
+        if (isArray) {
+          const all = data as Product[];
+          totalElementsVal = all.length;
+          totalPagesVal = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+          content = all.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+        } else {
+          const pageData = data as PageResponse;
+          content = pageData.content;
+          totalElementsVal = pageData.totalElements;
+          totalPagesVal = pageData.totalPages;
+        }
+
+        setTotalElements(totalElementsVal);
+        setTotalPages(totalPagesVal);
+        setProducts(content);
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         setError(err instanceof Error ? err.message : "Unable to load products.");
         setLoading(false);
-      });
-  }, []);
+      }
+    };
 
-  const filteredProducts = useMemo(() => {
-    let result = allProducts.filter((product) => {
-      const matchesCategory = category === "All" || product.category === category;
-
-      const searchTerm = debouncedSearch.trim().toLowerCase();
-
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm) ||
-        product.description.toLowerCase().includes(searchTerm);
-
-      const matchesMin = minPrice === "" || product.price >= Number(minPrice);
-
-      const matchesMax = maxPrice === "" || product.price <= Number(maxPrice);
-
-      return matchesCategory && matchesSearch && matchesMin && matchesMax;
-    });
-
-    switch (sort) {
-      case "low":
-        result = [...result].sort((a, b) => a.price - b.price);
-        break;
-
-      case "high":
-        result = [...result].sort((a, b) => b.price - a.price);
-        break;
-
-      case "rating":
-        result = [...result].sort((a, b) => b.rating - a.rating);
-        break;
-
-      case "name":
-        result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-        break;
-    }
-
-    return result;
-  }, [category, debouncedSearch, minPrice, maxPrice, sort, allProducts]);
-
-  const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
-
-  const paginatedProducts = filteredProducts.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
-  );
-
+    fetchProducts();
+  }, [page, category, sortBy, order, minRating, minPrice, maxPrice, debouncedSearch]);
   const clearFilters = () => {
-    setCategory("All");
-    setSearch("");
-    setMinPrice("");
-    setMaxPrice("");
-    setSort("default");
-    setPage(1);
+    setSearchParams(new URLSearchParams());
   };
 
   if (loading) {
@@ -103,7 +118,9 @@ function Shop() {
       <main className="shop-page">
         <div className="shop-heading">
           <span className="section-tag">DISCOVER YOUR STYLE</span>
-          <h1>Our Collection<span>.</span></h1>
+          <h1>
+            Our Collection<span>.</span>
+          </h1>
           <p>Explore our complete collection of products.</p>
         </div>
         <div className="products-grid">
@@ -117,7 +134,11 @@ function Shop() {
 
   return (
     <main className="shop-page">
-      {error && <div className="home-error" role="alert">{error}</div>}
+      {error && (
+        <div className="home-error" role="alert">
+          {error}
+        </div>
+      )}
 
       <div className="shop-heading">
         <span className="section-tag">DISCOVER YOUR STYLE</span>
@@ -134,14 +155,14 @@ function Shop() {
             type="search"
             placeholder="Search products..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => updateParams({ search: e.target.value, page: "1" })}
             aria-label="Search products"
           />
 
           {search && (
             <button
               className="clear-search"
-              onClick={() => setSearch("")}
+              onClick={() => updateParams({ search: null, page: "1" })}
               aria-label="Clear search"
             >
               <X size={16} />
@@ -151,7 +172,11 @@ function Shop() {
 
         <div className="sort-select">
           <SlidersHorizontal size={17} />
-          <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort products">
+          <select
+            value={sort}
+            onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
+            aria-label="Sort products"
+          >
             <option value="default">Default sorting</option>
             <option value="low">Price: Low to High</option>
             <option value="high">Price: High to Low</option>
@@ -175,11 +200,26 @@ function Shop() {
               <button
                 key={item}
                 className={category === item ? "selected" : ""}
-                onClick={() => setCategory(item)}
+                onClick={() => updateParams({ category: item, page: "1" })}
               >
                 {item}
               </button>
             ))}
+          </div>
+
+          <div className="filter-group">
+            <h4>Minimum rating</h4>
+
+            <select
+              value={minRating}
+              onChange={(e) => updateParams({ minRating: e.target.value, page: "1" })}
+            >
+              <option value={0}>Any rating</option>
+              <option value={1}>1 star and up</option>
+              <option value={2}>2 stars and up</option>
+              <option value={3}>3 stars and up</option>
+              <option value={4}>4 stars and up</option>
+            </select>
           </div>
 
           <div className="filter-group">
@@ -192,7 +232,7 @@ function Shop() {
               min="0"
               placeholder="₹ Min"
               value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
+              onChange={(e) => updateParams({ minPrice: e.target.value, page: "1" })}
             />
 
             <label htmlFor="max-price">Maximum price</label>
@@ -202,7 +242,7 @@ function Shop() {
               min="0"
               placeholder="₹ Max"
               value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
+              onChange={(e) => updateParams({ maxPrice: e.target.value, page: "1" })}
             />
           </div>
         </aside>
@@ -210,21 +250,24 @@ function Shop() {
         <section className="shop-results">
           <div className="results-heading">
             <p>
-              Showing {paginatedProducts.length} of {filteredProducts.length} products
+              Showing {products.length} of {totalElements} products
             </p>
           </div>
 
-          {paginatedProducts.length > 0 ? (
+          {products.length > 0 ? (
             <>
               <div className="products-grid">
-                {paginatedProducts.map((product) => (
+                {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
 
               {totalPages > 1 && (
                 <div className="pagination">
-                  <button disabled={page === 1} onClick={() => setPage((current) => current - 1)}>
+                  <button
+                    disabled={page === 1}
+                    onClick={() => updateParams({ page: String(page - 1) })}
+                  >
                     Previous
                   </button>
 
@@ -232,7 +275,7 @@ function Shop() {
                     <button
                       key={index + 1}
                       className={page === index + 1 ? "active" : ""}
-                      onClick={() => setPage(index + 1)}
+                      onClick={() => updateParams({ page: String(index + 1) })}
                       aria-label={`Page ${index + 1}`}
                       aria-current={page === index + 1 ? "page" : undefined}
                     >
@@ -242,7 +285,7 @@ function Shop() {
 
                   <button
                     disabled={page === totalPages}
-                    onClick={() => setPage((current) => current + 1)}
+                    onClick={() => updateParams({ page: String(page + 1) })}
                   >
                     Next
                   </button>

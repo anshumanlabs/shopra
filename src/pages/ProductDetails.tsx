@@ -16,6 +16,8 @@ import {
 import { productService } from "../services/productService";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
+import WishlistSnackbar from "../components/WishlistSnackbar";
+import type { Product, ProductComment } from "../types";
 import "./ProductDetails.css";
 import { getProductImage } from "../utils/images";
 
@@ -37,7 +39,7 @@ function ProductDetailsContent() {
   const { addToCart, toggleWishlist, wishlist } = useShop();
   const { user, isAuthenticated } = useAuth();
 
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [reviews, setReviews] = useState<ProductReview[]>([]);
@@ -46,27 +48,29 @@ function ProductDetailsContent() {
   const [sortBy, setSortBy] = useState<ReviewSort>("recent");
   const [message, setMessage] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [showWishlistSnackbar, setShowWishlistSnackbar] = useState(false);
 
   useEffect(() => {
     if (!productId) {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 0);
       return;
     }
 
     productService
       .getById(Number(productId))
-      .then((data: any) => {
-        setProduct(data);
-
+      .then((data: unknown) => {
+        const productData = data as Product | null;
+        setProduct(productData);
         try {
           const saved = localStorage.getItem(`shopora_reviews_${productId}`);
           if (saved) {
             setReviews(JSON.parse(saved));
-          } else if (data?.comments) {
+          } else if (productData?.comments) {
             setReviews(
-              data.comments.map((comment: any) => ({
+              productData.comments.map((comment: ProductComment) => ({
                 ...comment,
-                productId: data.id,
+                id: String(comment.id),
+                productId: productData.id,
                 userId: `demo-${comment.id}`,
                 createdAt: comment.date,
               }))
@@ -289,7 +293,8 @@ function ProductDetailsContent() {
 
             <span>
               {product.oldPrice
-                ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) + "% OFF"
+                ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) +
+                  "% OFF"
                 : ""}
             </span>
           </div>
@@ -344,7 +349,13 @@ function ProductDetailsContent() {
             <button
               type="button"
               className={`details-wishlist ${isWishlisted ? "active" : ""}`}
-              onClick={() => toggleWishlist(product)}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setShowWishlistSnackbar(true);
+                  return;
+                }
+                toggleWishlist(product);
+              }}
               aria-label="Toggle wishlist"
               aria-pressed={isWishlisted}
             >
@@ -466,7 +477,9 @@ function ProductDetailsContent() {
             <div>
               <span>Support Email</span>
               <strong>
-                <a href={`mailto:${product.seller?.supportEmail}`}>{product.seller?.supportEmail}</a>
+                <a href={`mailto:${product.seller?.supportEmail}`}>
+                  {product.seller?.supportEmail}
+                </a>
               </strong>
             </div>
 
@@ -684,6 +697,11 @@ function ProductDetailsContent() {
           )}
         </div>
       </section>
+      <WishlistSnackbar
+        isOpen={showWishlistSnackbar}
+        onClose={() => setShowWishlistSnackbar(false)}
+        productName={product.name}
+      />
     </main>
   );
 }

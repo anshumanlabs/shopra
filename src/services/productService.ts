@@ -6,12 +6,32 @@ import products from "../data/products";
 const STORAGE_KEY = "shopra_products";
 
 export const productService = {
-  async getAll() {
+  async getAll(params?: {
+    page?: number;
+    size?: number;
+    category?: string;
+    sortBy?: string;
+    order?: string;
+    minRating?: number;
+    minPrice?: number;
+    maxPrice?: number;
+  }) {
     if (env.isLocal) {
       return storageService.get(STORAGE_KEY, products);
     }
 
-    return apiClient.get("/api/products");
+    const query = new URLSearchParams();
+    if (params?.page !== undefined) query.set("page", String(params.page));
+    if (params?.size !== undefined) query.set("size", String(params.size));
+    if (params?.category) query.set("category", params.category);
+    if (params?.sortBy) query.set("sortBy", params.sortBy);
+    if (params?.order) query.set("order", params.order);
+    if (params?.minRating !== undefined) query.set("minRating", String(params.minRating));
+    if (params?.minPrice !== undefined) query.set("minPrice", String(params.minPrice));
+    if (params?.maxPrice !== undefined) query.set("maxPrice", String(params.maxPrice));
+
+    const qs = query.toString();
+    return apiClient.get(qs ? `/api/products?${qs}` : "/api/products");
   },
 
   async getById(id: number) {

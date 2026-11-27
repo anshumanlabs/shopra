@@ -1,0 +1,87 @@
+.wishlist-snackbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  z-index: 1100;
+  display: flex;
+  justify-content: center;
+  animation: snackbarSlideUp 0.35s ease forwards;
+}
+
+.wishlist-snackbar-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1f2937;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  min-width: 320px;
+  max-width: 480px;
+  border: 1px solid #374151;
+}
+
+.wishlist-snackbar-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.wishlist-snackbar-message {
+  font-size: 14px;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.wishlist-snackbar-action {
+  color: #a78bfa;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.wishlist-snackbar-action:hover {
+  text-decoration: underline;
+}
+
+.wishlist-snackbar-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.wishlist-snackbar-close:hover {
+  color: #fff;
+}
+
+@keyframes snackbarSlideUp {
+  from {
+    transform: translateX(-50%) translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .wishlist-snackbar {
+    left: 20px;
+    right: 20px;
+    transform: translateY(100px);
+  }
+
+  .wishlist-snackbar-content {
+    min-width: auto;
+    width: 100%;
+  }
+}

@@ -57,7 +57,9 @@
   height: 45px;
   object-fit: contain;
   display: block;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .footer-brand .logo:hover img {
@@ -73,7 +75,7 @@
   min-width: 0;
 }
 
-.footer-links>a {
+.footer-links > a {
   display: block;
   color: var(--muted);
   margin: 12px 0;
@@ -99,7 +101,9 @@
 .social-links a {
   color: var(--muted);
   font-size: 18px;
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .social-links a:hover {
@@ -121,7 +125,7 @@
   margin-bottom: 10px;
 }
 
-.footer-newsletter>p {
+.footer-newsletter > p {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
@@ -140,7 +144,9 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 7px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .footer-newsletter .newsletter-input-group:focus-within {
@@ -186,7 +192,9 @@
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
 }
 
 .footer-newsletter .newsletter-input-group button:hover {
@@ -261,13 +269,11 @@
   }
 }
 
-
 /* =========================================
    SMALL MOBILE
 ========================================= */
 
 @media (max-width: 380px) {
-
   .footer {
     padding-left: 14px;
     padding-right: 14px;
@@ -282,7 +288,7 @@
     height: 34px;
   }
 
-  .footer-brand>p {
+  .footer-brand > p {
     font-size: 10px;
     line-height: 1.6;
   }
@@ -295,7 +301,7 @@
     font-size: 13px;
   }
 
-  .footer-links>a {
+  .footer-links > a {
     font-size: 12px;
   }
 
@@ -318,7 +324,6 @@
     font-size: 9px;
   }
 }
-
 
 @media screen and (max-width: 600px) {
   .footer .footer-content {
@@ -347,7 +352,7 @@
   }
 
   /* FORCE MOTTO TO WRAP */
-  .footer .footer-brand>p {
+  .footer .footer-brand > p {
     display: block;
     position: static;
     width: 100%;
