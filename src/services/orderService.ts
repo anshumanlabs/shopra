@@ -14,7 +14,7 @@ export const orderService = {
     }
 
     return apiClient.get<Order[]>(
-      `/orders${userId ? `?userId=${encodeURIComponent(userId)}` : ""}`,
+      `/api/orders${userId ? `?userId=${encodeURIComponent(userId)}` : ""}`,
       token
     );
   },
@@ -26,7 +26,7 @@ export const orderService = {
       return orders.find((order) => order.id === id) ?? null;
     }
 
-    return apiClient.get<Order>(`/orders/${id}`, token);
+    return apiClient.get<Order>(`/api/orders/${id}`, token);
   },
 
   async create(order: Omit<Order, "id" | "createdAt">, token?: string): Promise<Order> {
@@ -44,6 +44,6 @@ export const orderService = {
       return newOrder;
     }
 
-    return apiClient.post<Order>("/orders", order, token);
+    return apiClient.post<Order>("/api/orders", order, token);
   },
 };

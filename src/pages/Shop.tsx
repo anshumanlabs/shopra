@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
-import products from "../data/products";
+import { productService } from "../services/productService";
 import ProductCard from "../components/ProductCard";
 import useDebounce from "../hooks/useDebounce";
+import type { Product } from "../types";
 import "./Shop.css";
 
 const PAGE_SIZE = 6;
@@ -21,12 +22,29 @@ function Shop() {
   const [maxPrice, setMaxPrice] = useState("");
   const [page, setPage] = useState(1);
 
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const debouncedSearch = useDebounce(search, 350);
 
   const categories = ["All", "Fashion", "Electronics", "Accessories", "Footwear"];
 
+  useEffect(() => {
+    productService
+      .getAll()
+      .then((data) => {
+        setAllProducts(data as Product[]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Unable to load products.");
+        setLoading(false);
+      });
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    let result = products.filter((product) => {
+    let result = allProducts.filter((product) => {
       const matchesCategory = category === "All" || product.category === category;
 
       const searchTerm = debouncedSearch.trim().toLowerCase();
@@ -62,11 +80,14 @@ function Shop() {
     }
 
     return result;
-  }, [category, debouncedSearch, minPrice, maxPrice, sort]);
+  }, [category, debouncedSearch, minPrice, maxPrice, sort, allProducts]);
 
   const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
-  const paginatedProducts = filteredProducts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginatedProducts = filteredProducts.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  );
 
   const clearFilters = () => {
     setCategory("All");
@@ -77,8 +98,27 @@ function Shop() {
     setPage(1);
   };
 
+  if (loading) {
+    return (
+      <main className="shop-page">
+        <div className="shop-heading">
+          <span className="section-tag">DISCOVER YOUR STYLE</span>
+          <h1>Our Collection<span>.</span></h1>
+          <p>Explore our complete collection of products.</p>
+        </div>
+        <div className="products-grid">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="product-skeleton" />
+          ))}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="shop-page">
+      {error && <div className="home-error" role="alert">{error}</div>}
+
       <div className="shop-heading">
         <span className="section-tag">DISCOVER YOUR STYLE</span>
         <h1>

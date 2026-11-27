@@ -38,3 +38,34 @@ export interface Order {
   paymentStatus: PaymentStatus;
   createdAt: string;
 }
+
+export interface Payment {
+  id: string;
+  orderId: string;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  provider: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface PaymentRequest {
+  orderId: string;
+  amount: number;
+  currency?: string;
+  paymentMethodToken: string;
+  provider?: string;
+}
+
+export interface PaymentResponse {
+  paymentId: string;
+  orderId: string;
+  status: PaymentStatus;
+  provider: string;
+  amount: number;
+  currency: string;
+  createdAt: string;
+  updatedAt: string | null;
+  message: string;
+}
