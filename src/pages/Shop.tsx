@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
@@ -24,7 +24,27 @@ const SORT_MAP: Record<string, { sortBy: string; order: string }> = {
   name: { sortBy: "name", order: "asc" },
 };
 
+const ShopHeading = memo(function ShopHeading() {
+  return (
+    <div className="shop-heading">
+      <span className="section-tag">DISCOVER YOUR STYLE</span>
+      <h1>
+        Our Collection<span>.</span>
+      </h1>
+    </div>
+  );
+});
+
 function Shop() {
+  return (
+    <main className="shop-page">
+      <ShopHeading />
+      <ShopContent />
+    </main>
+  );
+}
+
+function ShopContent() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const category = searchParams.get("category") || "All";
@@ -33,13 +53,7 @@ function Shop() {
   const minPrice = searchParams.get("minPrice") || "";
   const maxPrice = searchParams.get("maxPrice") || "";
   const minRating = Number(searchParams.get("minRating") || 0);
-  const page = Number(searchParams.get("page") || 1);
-
-  const [products, setProducts] = useState<Product[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalElements, setTotalElements] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const page = Math.max(1, Number(searchParams.get("page") || 1));
 
   const debouncedSearch = useDebounce(search, 350);
 
@@ -49,6 +63,7 @@ function Shop() {
 
   const updateParams = (updates: Record<string, string | null>) => {
     const next = new URLSearchParams(searchParams);
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value === null || value === "") {
         next.delete(key);
@@ -56,101 +71,26 @@ function Shop() {
         next.set(key, value);
       }
     });
+
+    // Remove default values from URL
     if (next.get("category") === "All") next.delete("category");
     if (next.get("sort") === "default") next.delete("sort");
     if (next.get("minRating") === "0") next.delete("minRating");
     if (next.get("page") === "1") next.delete("page");
+
     setSearchParams(next);
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      setError("");
-
-      try {
-        const data = (await productService.getAll({
-          page: page - 1,
-          size: PAGE_SIZE,
-          category,
-          sortBy,
-          order,
-          minRating,
-          minPrice: minPrice === "" ? undefined : Number(minPrice),
-          maxPrice: maxPrice === "" ? undefined : Number(maxPrice),
-        })) as unknown;
-
-        const isArray = Array.isArray(data);
-        let content: Product[];
-        let totalElementsVal: number;
-        let totalPagesVal: number;
-
-        if (isArray) {
-          const all = data as Product[];
-          totalElementsVal = all.length;
-          totalPagesVal = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
-          content = all.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-        } else {
-          const pageData = data as PageResponse;
-          content = pageData.content;
-          totalElementsVal = pageData.totalElements;
-          totalPagesVal = pageData.totalPages;
-        }
-
-        setTotalElements(totalElementsVal);
-        setTotalPages(totalPagesVal);
-        setProducts(content);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unable to load products.");
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [page, category, sortBy, order, minRating, minPrice, maxPrice, debouncedSearch]);
   const clearFilters = () => {
     setSearchParams(new URLSearchParams());
   };
 
-  if (loading) {
-    return (
-      <main className="shop-page">
-        <div className="shop-heading">
-          <span className="section-tag">DISCOVER YOUR STYLE</span>
-          <h1>
-            Our Collection<span>.</span>
-          </h1>
-          <p>Explore our complete collection of products.</p>
-        </div>
-        <div className="products-grid">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="product-skeleton" />
-          ))}
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="shop-page">
-      {error && (
-        <div className="home-error" role="alert">
-          {error}
-        </div>
-      )}
-
-      <div className="shop-heading">
-        <span className="section-tag">DISCOVER YOUR STYLE</span>
-        <h1>
-          Our Collection<span>.</span>
-        </h1>
-        <p>Explore our complete collection of products.</p>
-      </div>
-
+    <>
       <div className="shop-toolbar">
         <div className="shop-search">
           <Search size={18} />
+
           <input
             type="search"
             placeholder="Search products..."
@@ -172,6 +112,7 @@ function Shop() {
 
         <div className="sort-select">
           <SlidersHorizontal size={17} />
+
           <select
             value={sort}
             onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
@@ -247,63 +188,180 @@ function Shop() {
           </div>
         </aside>
 
-        <section className="shop-results">
-          <div className="results-heading">
-            <p>
-              Showing {products.length} of {totalElements} products
-            </p>
+        <ProductResults
+          page={page}
+          category={category}
+          sortBy={sortBy}
+          order={order}
+          minRating={minRating}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          debouncedSearch={debouncedSearch}
+          onPageChange={(nextPage) => updateParams({ page: String(nextPage) })}
+          clearFilters={clearFilters}
+        />
+      </div>
+    </>
+  );
+}
+
+interface ProductResultsProps {
+  page: number;
+  category: string;
+  sortBy: string;
+  order: string;
+  minRating: number;
+  minPrice: string;
+  maxPrice: string;
+  debouncedSearch: string;
+  onPageChange: (page: number) => void;
+  clearFilters: () => void;
+}
+
+function ProductResults({
+  page,
+  category,
+  sortBy,
+  order,
+  minRating,
+  minPrice,
+  maxPrice,
+  debouncedSearch,
+  onPageChange,
+  clearFilters,
+}: ProductResultsProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const data = (await productService.getAll({
+          page: page - 1,
+          size: PAGE_SIZE,
+          category,
+          sortBy,
+          order,
+          minRating,
+          minPrice: minPrice === "" ? undefined : Number(minPrice),
+          maxPrice: maxPrice === "" ? undefined : Number(maxPrice),
+        })) as unknown;
+
+        if (cancelled) return;
+
+        const isArray = Array.isArray(data);
+
+        let content: Product[];
+        let totalElementsVal: number;
+        let totalPagesVal: number;
+
+        if (isArray) {
+          const all = data as Product[];
+
+          totalElementsVal = all.length;
+          totalPagesVal = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+
+          content = all.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+        } else {
+          const pageData = data as PageResponse;
+
+          content = pageData.content;
+          totalElementsVal = pageData.totalElements;
+          totalPagesVal = pageData.totalPages;
+        }
+
+        setTotalElements(totalElementsVal);
+        setTotalPages(totalPagesVal);
+        setProducts(content);
+      } catch (err) {
+        if (cancelled) return;
+
+        setError(err instanceof Error ? err.message : "Unable to load products.");
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page, category, sortBy, order, minRating, minPrice, maxPrice, debouncedSearch]);
+
+  return (
+    <section className="shop-results">
+      {error && (
+        <div className="home-error" role="alert">
+          {error}
+        </div>
+      )}
+
+      <div className="results-heading">
+        <p>
+          Showing {loading ? 0 : products.length} of {totalElements} products
+        </p>
+      </div>
+
+      {loading ? (
+        <div className="products-grid" aria-busy="true">
+          {Array.from({ length: PAGE_SIZE }, (_, i) => (
+            <div key={i} className="product-skeleton" />
+          ))}
+        </div>
+      ) : products.length > 0 ? (
+        <>
+          <div className="products-grid">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
 
-          {products.length > 0 ? (
-            <>
-              <div className="products-grid">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button disabled={page === 1} onClick={() => onPageChange(page - 1)}>
+                Previous
+              </button>
 
-              {totalPages > 1 && (
-                <div className="pagination">
-                  <button
-                    disabled={page === 1}
-                    onClick={() => updateParams({ page: String(page - 1) })}
-                  >
-                    Previous
-                  </button>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  className={page === index + 1 ? "active" : ""}
+                  onClick={() => onPageChange(index + 1)}
+                  aria-label={`Page ${index + 1}`}
+                  aria-current={page === index + 1 ? "page" : undefined}
+                >
+                  {index + 1}
+                </button>
+              ))}
 
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                      key={index + 1}
-                      className={page === index + 1 ? "active" : ""}
-                      onClick={() => updateParams({ page: String(index + 1) })}
-                      aria-label={`Page ${index + 1}`}
-                      aria-current={page === index + 1 ? "page" : undefined}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-
-                  <button
-                    disabled={page === totalPages}
-                    onClick={() => updateParams({ page: String(page + 1) })}
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="empty-state">
-              <h2>No products found</h2>
-              <p>Try changing your search or filters.</p>
-              <button className="primary-btn" onClick={clearFilters}>
-                Clear Filters
+              <button disabled={page === totalPages} onClick={() => onPageChange(page + 1)}>
+                Next
               </button>
             </div>
           )}
-        </section>
-      </div>
-    </main>
+        </>
+      ) : (
+        <div className="empty-state">
+          <h2>No products found</h2>
+          <p>Try changing your search or filters.</p>
+
+          <button className="primary-btn" onClick={clearFilters}>
+            Clear Filters
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 
