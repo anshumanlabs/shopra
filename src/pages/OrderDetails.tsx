@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
+import { useAuth } from "../context/AuthContext";
 import type { Order } from "../types/orders";
 import { orderService } from "../services/orderService";
 import "./OrderDetail.css";
 import { getProductImage } from "../utils/images";
 
-const trackingSteps = ["PLACED", "PROCESSING", "SHIPPED", "DELIVERED"];
+const trackingSteps = ["PENDING_PAYMENT", "PROCESSING", "SHIPPED", "DELIVERED"];
 
 function OrderDetails() {
   const { orderId } = useParams();
+  const { accessToken } = useAuth();
 
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState("");
@@ -23,7 +26,7 @@ function OrderDetails() {
           throw new Error("Invalid order ID");
         }
 
-        const result = await orderService.getById(orderId);
+        const result = await orderService.getById(orderId, accessToken ?? undefined);
 
         if (!result) {
           throw new Error("Order not found");
@@ -48,9 +51,11 @@ function OrderDetails() {
     return () => {
       active = false;
     };
-  }, [orderId]);
+  }, [orderId, accessToken]);
 
-  if (loading) return <p>Loading order...</p>;
+  if (loading) {
+    return <p>Loading order...</p>;
+  }
 
   if (error || !order) {
     return (
@@ -76,11 +81,20 @@ function OrderDetails() {
         ) : (
           <ol>
             {trackingSteps.map((step, index) => (
-              <li key={step} className={index <= currentStep ? "completed" : ""}>
-                {step}
+              <li
+                key={step}
+                className={currentStep >= 0 && index <= currentStep ? "completed" : ""}
+              >
+                {step.replaceAll("_", " ")}
               </li>
             ))}
           </ol>
+        )}
+
+        {order.paymentStatus === "PENDING" && <p>Payment is awaiting confirmation.</p>}
+
+        {order.paymentStatus === "FAILED" && (
+          <p>Payment failed. This order has not entered processing.</p>
         )}
       </section>
 

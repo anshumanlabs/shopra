@@ -1,20 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Plus, CreditCard, CheckCircle2, ShieldCheck } from "lucide-react";
+import { MapPin, Plus, CreditCard, CheckCircle2, ShieldCheck, X } from "lucide-react";
+import { Button } from "@mui/material";
 
 import "./Checkout.css";
 import { useShop } from "../context/ShopContext";
 import { useAuth } from "../context/AuthContext";
-import type { ShippingAddress } from "../types/orders";
+import type { SavedAddress, ShippingAddress } from "../types/orders";
 import { validateCard } from "../utils/cardValidator";
 import { orderService } from "../services/orderService";
 import { paymentService } from "../services/paymentService";
+import { addressService } from "../services/addressService";
 import { getProductImage } from "../utils/images";
-
-type SavedAddress = ShippingAddress & {
-  id: string;
-  isDefault: boolean;
-};
+import { env } from "../config/env";
 
 const initialAddress: ShippingAddress = {
   fullName: "",
@@ -26,47 +24,74 @@ const initialAddress: ShippingAddress = {
   pincode: "",
 };
 
-function formatCardNumber(value: string) {
+const FREE_SHIPPING_THRESHOLD = 999;
+const SHIPPING_CHARGE = 49;
+
+function formatCardNumber(value: string): string {
   const digits = value.replace(/\D/g, "").slice(0, 19);
   return digits.match(/.{1,4}/g)?.join(" ") ?? "";
 }
 
-function formatExpiry(value: string) {
+function formatExpiry(value: string): string {
   const digits = value.replace(/\D/g, "").slice(0, 4);
 
-  if (digits.length <= 2) return digits;
+  if (digits.length <= 2) {
+    return digits;
+  }
 
   return `${digits.slice(0, 2)}/${digits.slice(2)}`;
 }
 
-function validateExpiry(value: string) {
-  if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) {
-    return "Enter expiry in MM/YY format, for example 12/28.";
+function validateShippingAddress(value: ShippingAddress): string[] {
+  const errors: string[] = [];
+
+  if (!value.fullName.trim()) {
+    errors.push("Enter your full name.");
   }
 
-  const [monthText, yearText] = value.split("/");
-  const month = Number(monthText);
-  const year = 2000 + Number(yearText);
-
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth() + 1;
-
-  if (year < currentYear || (year === currentYear && month < currentMonth)) {
-    return "Your card has expired.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) {
+    errors.push("Enter a valid email address.");
   }
 
-  return "";
+  if (!/^[6-9]\d{9}$/.test(value.phone)) {
+    errors.push("Enter a valid 10-digit Indian mobile number.");
+  }
+
+  if (!value.address.trim()) {
+    errors.push("Enter your street address.");
+  }
+
+  if (!value.city.trim()) {
+    errors.push("Enter your city.");
+  }
+
+  if (!value.state.trim()) {
+    errors.push("Enter your state.");
+  }
+
+  if (!/^\d{6}$/.test(value.pincode)) {
+    errors.push("Enter a valid 6-digit PIN code.");
+  }
+
+  return errors;
+}
+
+function delay(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, milliseconds);
+  });
 }
 
 function Checkout() {
   const { cart, clearCart } = useShop();
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
   const navigate = useNavigate();
 
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [addressesLoading, setAddressesLoading] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [useNewAddress, setUseNewAddress] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(false);
 
   const [address, setAddress] = useState<ShippingAddress>({
     ...initialAddress,
@@ -80,34 +105,32 @@ function Checkout() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [addressErrors, setAddressErrors] = useState<string[]>([]);
 
-  const storageKey = user ? `shopra_addresses_${user.email}` : "";
-
-  useEffect(() => {
-    if (!storageKey) {
+  const loadAddresses = async () => {
+    if (!user) {
       setSavedAddresses([]);
       setSelectedAddressId("");
       setUseNewAddress(true);
       return;
     }
 
+    setAddressesLoading(true);
     try {
-      const stored = localStorage.getItem(storageKey);
-      const parsed: SavedAddress[] = stored ? JSON.parse(stored) : [];
+      const parsed = await addressService.getAll(user.email, accessToken ?? undefined);
 
       setSavedAddresses(parsed);
 
-      const defaultAddress = parsed.find((item) => item.isDefault);
-      const selected = defaultAddress ?? parsed[0];
+      const defaultAddress = parsed.find((item) => item.isDefault) ?? parsed[0];
 
-      setSelectedAddressId(selected?.id ?? "");
-      setUseNewAddress(parsed.length === 0);
+      setSelectedAddressId(defaultAddress?.id ?? "");
+      setUseNewAddress(false);
     } catch {
       setSavedAddresses([]);
       setSelectedAddressId("");
-      setUseNewAddress(true);
+      setUseNewAddress(false);
+    } finally {
+      setAddressesLoading(false);
     }
 
     setAddress({
@@ -115,14 +138,20 @@ function Checkout() {
       fullName: user?.name ?? "",
       email: user?.email ?? "",
     });
-  }, [storageKey, user?.name, user?.email]);
+  };
+
+  useEffect(() => {
+    loadAddresses();
+  }, [user, accessToken]);
 
   const subtotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cart]
   );
 
-  const shipping = subtotal >= 2000 ? 0 : 99;
+  // Keep the displayed demo estimate aligned with the order-service policy.
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_CHARGE;
+
   const total = subtotal + shipping;
 
   const selectedAddress = savedAddresses.find((item) => item.id === selectedAddressId);
@@ -137,28 +166,72 @@ function Checkout() {
     setError("");
   };
 
-  const validateShippingAddress = (value: ShippingAddress) => {
-    const errors: string[] = [];
+  const handleSaveAddress = async () => {
+    const cleanedAddress: ShippingAddress = {
+      fullName: address.fullName.trim(),
+      email: address.email.trim(),
+      phone: address.phone.trim(),
+      address: address.address.trim(),
+      city: address.city.trim(),
+      state: address.state.trim(),
+      pincode: address.pincode.trim(),
+      isDefault: false,
+    };
 
-    if (!value.fullName.trim()) errors.push("Enter your full name.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) {
-      errors.push("Enter a valid email address.");
-    }
-    if (!/^[6-9]\d{9}$/.test(value.phone)) {
-      errors.push("Enter a valid 10-digit Indian mobile number.");
-    }
-    if (!value.address.trim()) errors.push("Enter your street address.");
-    if (!value.city.trim()) errors.push("Enter your city.");
-    if (!value.state.trim()) errors.push("Enter your state.");
-    if (!/^\d{6}$/.test(value.pincode)) {
-      errors.push("Enter a valid 6-digit PIN code.");
+    const errors = validateShippingAddress(cleanedAddress);
+
+    if (errors.length > 0) {
+      setAddressErrors(errors);
+      setError("Please correct your delivery information.");
+      return;
     }
 
-    return errors;
+    setLoading(true);
+    try {
+      const saved = await addressService.save(
+        user.email,
+        cleanedAddress,
+        accessToken ?? undefined
+      );
+
+      await loadAddresses();
+
+      setSelectedAddressId(saved.id);
+      setShowAddressForm(false);
+      setUseNewAddress(false);
+      setAddress(initialAddress);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save address.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePlaceOrder = async (event: React.FormEvent<HTMLFormElement>) => {
+  const pollPayment = async (paymentId: string): Promise<void> => {
+    for (let attempt = 0; attempt < env.paymentMaxAttempts; attempt++) {
+      await delay(env.paymentPollingInterval);
+
+      const payment = await paymentService.getPayment(paymentId, accessToken ?? undefined);
+
+      if (!payment) {
+        throw new Error("Unable to find the payment.");
+      }
+
+      if (payment.status === "SUCCESS") {
+        return;
+      }
+
+      if (payment.status === "FAILED") {
+        throw new Error("Payment failed. Please try again.");
+      }
+    }
+
+    throw new Error("Payment is still pending. Please check your order before retrying.");
+  };
+
+  const handlePlaceOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     setError("");
     setAddressErrors([]);
 
@@ -172,7 +245,7 @@ function Checkout() {
       return;
     }
 
-    let shippingAddress: ShippingAddress | undefined;
+    let shippingAddress: ShippingAddress;
 
     if (useNewAddress) {
       const errors = validateShippingAddress(address);
@@ -182,87 +255,111 @@ function Checkout() {
         setError("Please correct your delivery information.");
         return;
       }
+
       shippingAddress = address;
     } else {
-      shippingAddress = selectedAddress;
-
-      if (!shippingAddress) {
+      if (!selectedAddress) {
         setError("Please select a delivery address.");
         return;
       }
-    }
 
-    const expiryError = validateExpiry(expiry);
-
-    if (expiryError) {
-      setError(expiryError);
-      return;
-    }
-
-    if (!/^\d{3,4}$/.test(cvv)) {
-      setError("CVV must contain 3 or 4 digits.");
-      return;
+      shippingAddress = selectedAddress;
     }
 
     const validation = validateCard(cardNumber, expiry, cvv);
 
-    if (validation.valid) {
+    // Important: reject invalid card input, not valid card input.
+    if (!validation.valid) {
       setError(validation.errors.join(" "));
+      return;
+    }
+
+    if (!accessToken && !env.isLocal) {
+      setError("Your session has expired. Please log in again.");
+      navigate("/login");
       return;
     }
 
     setLoading(true);
 
     try {
-      const payment = await paymentService.createPayment({
-        orderId: crypto.randomUUID(),
-        amount: total,
-        currency: "INR",
-        paymentMethodToken: `tok_${cardNumber.replace(/\D/g, "").slice(-4)}`,
-        provider: "MOCK_GATEWAY",
-      });
+      /*
+       * STEP 1: Create the order first.
+       *
+       * API mode sends product IDs and quantities only.
+       * The order service fetches prices from product catalog.
+       *
+       * Local mode stores a local demo order with a pending payment state.
+       */
+      const createdOrder = env.isLocal
+        ? await orderService.createLocalOrder({
+            userId: user.id,
+            items: cart.map((item) => ({
+              productId: item.id,
+              name: item.name,
+              image: item.image,
+              price: item.price,
+              quantity: item.quantity,
+            })),
+            shippingAddress,
+            subtotal,
+            discount: 0,
+            shipping,
+            total,
+          })
+        : await orderService.create(
+            {
+              items: cart.map((item) => ({
+                productId: item.id,
+                quantity: item.quantity,
+              })),
+              shippingAddress,
+            },
+            accessToken ?? undefined
+          );
 
-      if (payment.status !== "SUCCESS") {
-        const maxAttempts = 10;
-        const intervalMs = 1000;
+      /*
+       * STEP 2: Create payment against the persisted order.
+       *
+       * This is a mock token for the demo gateway. It is not a real
+       * payment-provider token and no raw card number/CVV is sent.
+       */
+      const lastFour = cardNumber.replace(/\D/g, "").slice(-4);
 
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-          await new Promise((resolve) => setTimeout(resolve, intervalMs));
+      const payment = await paymentService.createPayment(
+        {
+          orderId: createdOrder.id,
+          paymentMethodToken: `tok_demo_${lastFour}`,
+          provider: "MOCK_GATEWAY",
+        },
+        accessToken ?? undefined,
+        env.isLocal ? createdOrder.total : undefined
+      );
 
-          const updatedPayment = await paymentService.getPayment(payment.paymentId);
-
-          if (updatedPayment?.status === "SUCCESS") {
-            break;
-          }
-
-          if (attempt === maxAttempts - 1) {
-            throw new Error("Payment did not complete in time. Please try again.");
-          }
-        }
+      /*
+       * STEP 3: Wait for the payment service to report its result.
+       * The browser does not call a payment-status mutation endpoint.
+       */
+      if (payment.status === "PENDING") {
+        await pollPayment(payment.paymentId);
+      } else if (payment.status === "FAILED") {
+        throw new Error("Payment failed. Please try again.");
       }
 
-      const createdOrder = await orderService.create({
-        userId: user.id,
-        items: cart.map((item) => ({
-          productId: item.id,
-          name: item.name,
-          image: item.image,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        shippingAddress,
-        subtotal,
-        discount: 0,
-        shipping,
-        total,
-        orderStatus: "PLACED",
-        paymentStatus: "SUCCESS",
-      });
+      /*
+       * STEP 4: Update only the local demo order.
+       * In API mode the payment service notifies the order service directly.
+       */
+      if (env.isLocal) {
+        await orderService.markLocalPaymentSuccessful(createdOrder.id);
+      }
 
       setCardNumber("");
       setExpiry("");
       setCvv("");
+
       clearCart();
+
       navigate(`/orders/${createdOrder.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to place your order.");
@@ -294,7 +391,6 @@ function Checkout() {
 
       <form onSubmit={handlePlaceOrder} className="checkout-layout">
         <div className="checkout-main">
-          {/* DELIVERY ADDRESS */}
           <section className="checkout-section">
             <div className="checkout-section-heading">
               <div>
@@ -304,7 +400,12 @@ function Checkout() {
               <MapPin size={21} />
             </div>
 
-            {savedAddresses.length > 0 && (
+            {addressesLoading ? (
+              <div className="address-empty">
+                <MapPin size={32} />
+                <h3>Loading addresses...</h3>
+              </div>
+            ) : savedAddresses.length > 0 ? (
               <div className="saved-address-list">
                 {savedAddresses.map((item) => (
                   <label
@@ -347,29 +448,64 @@ function Checkout() {
                   </label>
                 ))}
               </div>
+            ) : savedAddresses.length === 0 && !showAddressForm ? (
+              <div className="address-empty">
+                <MapPin size={42} />
+                <h3>No saved addresses</h3>
+                <p>Add your first delivery address to make checkout faster.</p>
+
+                <Button
+                  variant="outlined"
+                  startIcon={<Plus size={18} />}
+                  onClick={() => {
+                    setAddress(initialAddress);
+                    setUseNewAddress(true);
+                    setShowAddressForm(true);
+                  }}
+                >
+                  Add Your First Address
+                </Button>
+              </div>
+            ) : null}
+
+            {savedAddresses.length > 0 && (
+              <label className={`new-address-option ${useNewAddress ? "selected" : ""}`}>
+                <input
+                  type="radio"
+                  name="deliveryAddress"
+                  checked={useNewAddress}
+                  onChange={() => {
+                    setUseNewAddress(true);
+                    setError("");
+                  }}
+                />
+
+                <Plus size={19} />
+
+                <span>
+                  {savedAddresses.length > 0
+                    ? "Deliver to a different address"
+                    : "Add delivery address"}
+                </span>
+              </label>
             )}
 
-            <label className={`new-address-option ${useNewAddress ? "selected" : ""}`}>
-              <input
-                type="radio"
-                name="deliveryAddress"
-                checked={useNewAddress}
-                onChange={() => {
-                  setUseNewAddress(true);
-                  setError("");
-                }}
-              />
-
-              <Plus size={19} />
-              <span>
-                {savedAddresses.length > 0
-                  ? "Deliver to a different address"
-                  : "Add delivery address"}
-              </span>
-            </label>
-
-            {useNewAddress && (
+            {(useNewAddress || showAddressForm) && (
               <div className="new-address-form">
+                <div className="address-form-header">
+                  <h3>Add Delivery Address</h3>
+                  <button
+                    type="button"
+                    className="address-close"
+                    onClick={() => {
+                      setShowAddressForm(false);
+                      setUseNewAddress(false);
+                    }}
+                    aria-label="Close address form"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
                 <div className="checkout-fields-grid">
                   {(
                     [
@@ -415,11 +551,33 @@ function Checkout() {
                     ))}
                   </div>
                 )}
+
+                <div className="checkout-form-actions">
+                  <button
+                    type="button"
+                    className="checkout-cancel"
+                    onClick={() => {
+                      setShowAddressForm(false);
+                      setUseNewAddress(false);
+                      setAddress(initialAddress);
+                    }}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    className="checkout-save"
+                    onClick={handleSaveAddress}
+                    disabled={loading}
+                  >
+                    {loading ? "Saving..." : "Save Address"}
+                  </button>
+                </div>
               </div>
             )}
           </section>
 
-          {/* PAYMENT INFORMATION */}
           <section className="checkout-section">
             <div className="checkout-section-heading">
               <div>
@@ -491,7 +649,6 @@ function Checkout() {
           </button>
         </div>
 
-        {/* ORDER SUMMARY */}
         <aside className="checkout-summary">
           <h2>Order Summary</h2>
 
@@ -500,6 +657,7 @@ function Checkout() {
               <div className="checkout-summary-item" key={item.id}>
                 <div className="checkout-product-info">
                   <img src={getProductImage(item.image)} alt={item.name} />
+
                   <div>
                     <span>{item.name}</span>
                     <small>Qty: {item.quantity}</small>
@@ -526,7 +684,9 @@ function Checkout() {
           <div className="checkout-shipping-note">
             {shipping === 0
               ? "You qualify for free shipping!"
-              : `Add ₹${(2000 - subtotal).toLocaleString("en-IN")} more for free shipping.`}
+              : `Add ₹${(FREE_SHIPPING_THRESHOLD - subtotal).toLocaleString(
+                  "en-IN"
+                )} more for free shipping.`}
           </div>
 
           <hr />
@@ -537,7 +697,7 @@ function Checkout() {
           </div>
 
           <p className="checkout-summary-footer">
-            Taxes and charges are included where applicable.
+            Final amount is calculated by the order service in API mode.
           </p>
         </aside>
       </form>

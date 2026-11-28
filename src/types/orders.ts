@@ -6,6 +6,7 @@ export interface ShippingAddress {
   city: string;
   state: string;
   pincode: string;
+  isDefault: boolean;
 }
 
 export interface SavedAddress extends ShippingAddress {
@@ -13,12 +14,12 @@ export interface SavedAddress extends ShippingAddress {
   isDefault: boolean;
 }
 
-export type OrderStatus = "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+export type OrderStatus = "PENDING_PAYMENT" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
 
 export type PaymentStatus = "PENDING" | "SUCCESS" | "FAILED";
 
 export interface OrderItem {
-  productId: number;
+  productId: number | string;
   name: string;
   image: string;
   price: number;
@@ -39,6 +40,24 @@ export interface Order {
   createdAt: string;
 }
 
+export interface CreateOrderRequest {
+  items: Array<{
+    productId: number;
+    quantity: number;
+  }>;
+  shippingAddress: ShippingAddress;
+}
+
+export interface LocalOrderDraft {
+  userId: string;
+  items: OrderItem[];
+  shippingAddress: ShippingAddress;
+  subtotal: number;
+  discount: number;
+  shipping: number;
+  total: number;
+}
+
 export interface Payment {
   id: string;
   orderId: string;
@@ -52,8 +71,6 @@ export interface Payment {
 
 export interface PaymentRequest {
   orderId: string;
-  amount: number;
-  currency?: string;
   paymentMethodToken: string;
   provider?: string;
 }

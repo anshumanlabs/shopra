@@ -31,7 +31,7 @@ export const productService = {
     if (params?.maxPrice !== undefined) query.set("maxPrice", String(params.maxPrice));
 
     const qs = query.toString();
-    return apiClient.get(qs ? `/api/products?${qs}` : "/api/products");
+    return apiClient.get(qs ? `/products?${qs}` : "/products");
   },
 
   async getById(id: number) {
@@ -40,7 +40,7 @@ export const productService = {
       return allProducts.find((product) => product.id === id) ?? null;
     }
 
-    return apiClient.get(`/api/products/${id}`);
+    return apiClient.get(`/products/${id}`);
   },
 
   async save(product: unknown) {
@@ -50,6 +50,6 @@ export const productService = {
       return product;
     }
 
-    return apiClient.post("/api/products", product);
+    return apiClient.post("/products", product);
   },
 };

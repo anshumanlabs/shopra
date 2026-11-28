@@ -15,7 +15,7 @@ export const userService = {
       }
     }
 
-    return apiClient.get<AuthUser>("/api/v1/auth/profile", token);
+    return apiClient.get<AuthUser>("/users/profile", token);
   },
 
   async updateProfile(userData: Partial<AuthUser>, token?: string): Promise<AuthUser> {
@@ -33,6 +33,6 @@ export const userService = {
       return updated;
     }
 
-    return apiClient.put<AuthUser>("/api/v1/auth/profile", userData, token);
+    return apiClient.put<AuthUser>("/users/profile", userData, token);
   },
 };

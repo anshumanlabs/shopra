@@ -15,32 +15,16 @@ import {
 import { Button } from "@mui/material";
 
 import { useAuth } from "../context/AuthContext";
-import type { ShippingAddress } from "../types/orders";
+import type { ShippingAddress, SavedAddress } from "../types/orders";
+import { addressService } from "../services/addressService";
 import "./Profile.css";
 
-type SavedAddress = ShippingAddress & {
-  id: string;
-  isDefault: boolean;
-};
-
 function Profile() {
-  const { user, logout } = useAuth();
+  const { user, logout, accessToken } = useAuth();
   const navigate = useNavigate();
 
-  const storageKey = user ? `shopra_addresses_${user.email}` : "shopra_addresses_guest";
-
-  const [addresses, setAddresses] = useState<SavedAddress[]>(() => {
-    if (!user) return [];
-
-    try {
-      const saved = localStorage.getItem(`shopra_addresses_${user.email}`);
-
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
+  const [addresses, setAddresses] = useState<SavedAddress[]>([]);
+  const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -56,9 +40,23 @@ function Profile() {
 
   const [form, setForm] = useState<ShippingAddress>(initialAddress);
 
+  const loadAddresses = async () => {
+    if (!user) return;
+
+    setLoading(true);
+    try {
+      const data = await addressService.getAll(user.email, accessToken ?? undefined);
+      setAddresses(data);
+    } catch {
+      setAddresses([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(addresses));
-  }, [addresses, storageKey]);
+    loadAddresses();
+  }, [user, accessToken]);
 
   const handleLogout = () => {
     logout();
@@ -78,7 +76,7 @@ function Profile() {
     }));
   };
 
-  const handleSaveAddress = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveAddress = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const cleanedAddress: ShippingAddress = {
@@ -101,54 +99,71 @@ function Profile() {
       return;
     }
 
-    if (editingId) {
-      setAddresses((previous) =>
-        previous.map((item) => (item.id === editingId ? { ...item, ...cleanedAddress } : item))
-      );
-    } else {
-      const newAddress: SavedAddress = {
-        ...cleanedAddress,
-        id: crypto.randomUUID(),
-        isDefault: addresses.length === 0,
-      };
+    setLoading(true);
+    try {
+      if (editingId) {
+        await addressService.update(
+          user.email,
+          editingId,
+          cleanedAddress,
+          accessToken ?? undefined
+        );
+      } else {
+        await addressService.save(
+          user.email,
+          cleanedAddress,
+          accessToken ?? undefined
+        );
+      }
 
-      setAddresses((previous) => [...previous, newAddress]);
+      await loadAddresses();
+      resetForm();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to save address.");
+    } finally {
+      setLoading(false);
     }
-
-    resetForm();
   };
 
   const handleEdit = (address: SavedAddress) => {
-    const { id, ...addressDetails } = address;
+    const { id, isDefault, ...addressDetails } = address;
 
     setForm(addressDetails);
     setEditingId(id);
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this address?")) {
       return;
     }
 
-    setAddresses((previous) => {
-      const updated = previous.filter((item) => item.id !== id);
-
-      if (updated.length > 0 && !updated.some((item) => item.isDefault)) {
-        updated[0] = { ...updated[0], isDefault: true };
-      }
-
-      return updated;
-    });
+    setLoading(true);
+    try {
+      await addressService.delete(user.email, id, accessToken ?? undefined);
+      await loadAddresses();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete address.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSetDefault = (id: string) => {
-    setAddresses((previous) =>
-      previous.map((item) => ({
-        ...item,
-        isDefault: item.id === id,
-      }))
-    );
+  const handleSetDefault = async (id: string) => {
+    setLoading(true);
+    try {
+      await addressService.update(
+        user.email,
+        id,
+        { isDefault: true },
+        accessToken ?? undefined
+      );
+      await loadAddresses();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to set default address.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!user) return null;
@@ -271,7 +286,7 @@ function Profile() {
                 Cancel
               </Button>
 
-              <Button type="submit" variant="contained">
+              <Button type="submit" variant="contained" disabled={loading}>
                 {editingId ? "Update Address" : "Save Address"}
               </Button>
             </div>
@@ -279,7 +294,12 @@ function Profile() {
         )}
 
         {/* SAVED ADDRESSES */}
-        {addresses.length === 0 ? (
+        {loading && addresses.length === 0 ? (
+          <div className="address-empty">
+            <MapPin size={42} />
+            <h3>Loading addresses...</h3>
+          </div>
+        ) : addresses.length === 0 ? (
           <div className="address-empty">
             <MapPin size={42} />
             <h3>No saved addresses</h3>

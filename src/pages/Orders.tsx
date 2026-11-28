@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Package, ArrowRight } from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 import type { Order } from "../types/orders";
 import { orderService } from "../services/orderService";
 import "./Orders.css";
 
 function Orders() {
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ function Orders() {
         setLoading(true);
         setError("");
 
-        const result = await orderService.getAll(user.id);
+        const result = await orderService.getAll(user.id, accessToken ?? undefined);
 
         if (active) {
           setOrders(result);
@@ -48,9 +49,11 @@ function Orders() {
     return () => {
       active = false;
     };
-  }, [user]);
+  }, [user, accessToken]);
 
-  if (loading) return <p>Loading your orders...</p>;
+  if (loading) {
+    return <p>Loading your orders...</p>;
+  }
 
   return (
     <main className="orders-page">
